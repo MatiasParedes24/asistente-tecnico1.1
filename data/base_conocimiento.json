@@ -1,570 +1,792 @@
 {
     "metadata": {
         "nombre": "Base de conocimiento - Asistente Técnico",
-        "version": "1.0",
+        "version": "2.0",
         "ultima_actualizacion": "2026-10-02",
-        "descripcion": "Procedimientos operativos validados para consulta de asesores de soporte técnico."
+        "descripcion": "Base estructurada de procedimientos operativos para consulta del asistente.",
+        "politica_respuesta": "El asistente debe responder únicamente utilizando información registrada y validada en esta base."
     },
     "procedimientos": [
         {
             "id": "VAL001",
             "dominio": "validacion",
             "titulo": "Validación general antes de llamar al cliente",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "FTTH",
-                "HFC"
-            ],
-            "aplicativos": [
-                "TOA",
-                "SGA",
-                "Incognito"
-            ],
-            "intenciones": [
-                "que debo revisar antes de llamar al cliente",
-                "como inicio una validacion",
-                "que validar antes de llamar",
-                "que revisar antes de validar"
-            ],
-            "palabras_clave": [
-                "validacion",
-                "antes de llamar",
-                "actividad iniciada",
-                "detalle de solicitud",
-                "customer id",
-                "servicios activos",
-                "niveles"
-            ],
-            "respuesta_corta": "Verifica que la actividad esté iniciada, revisa el Detalle de Solicitud y valida servicios, equipos y niveles.",
-            "pasos": [
-                {
-                    "orden": 1,
-                    "aplicativo": "TOA",
-                    "accion": "Verificar que la actividad esté iniciada."
-                },
-                {
-                    "orden": 2,
-                    "aplicativo": "SGA",
-                    "accion": "Ingresar a Consulta Histórica y revisar Detalle de Solicitud."
-                },
-                {
-                    "orden": 3,
-                    "aplicativo": "SGA",
-                    "accion": "Obtener el Customer ID correspondiente."
-                },
-                {
-                    "orden": 4,
-                    "aplicativo": "Incognito",
-                    "accion": "Validar que los servicios y equipos esperados se encuentren activos."
-                },
-                {
-                    "orden": 5,
-                    "aplicativo": "Incognito",
-                    "accion": "Revisar los niveles según la tecnología."
-                }
-            ],
-            "precondiciones": [
-                "La SOT debe corresponder al caso que se está validando.",
-                "La actividad debe encontrarse iniciada."
-            ],
-            "evidencias": [
-                "Detalle de Solicitud",
-                "Customer ID",
-                "Estado de servicios y equipos",
-                "Niveles"
-            ],
-            "accion_si_falla": "Si la información no coincide o los niveles no cumplen, no continuar con la validación.",
-            "advertencias": [],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "FTTH",
+                    "HFC"
+                ],
+                "aplicativos": [
+                    "TOA",
+                    "SGA",
+                    "Incognito"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "que debo revisar antes de llamar al cliente",
+                    "como inicio una validacion",
+                    "que validar antes de llamar",
+                    "que revisar antes de validar"
+                ],
+                "palabras_clave": [
+                    "validacion",
+                    "antes de llamar",
+                    "actividad iniciada",
+                    "detalle de solicitud",
+                    "customer id",
+                    "servicios activos",
+                    "niveles"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Verifica que la actividad esté iniciada, revisa el Detalle de Solicitud y valida servicios, equipos y niveles.",
+                "pasos": [
+                    {
+                        "orden": 1,
+                        "aplicativo": "TOA",
+                        "accion": "Verificar que la actividad esté iniciada.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 2,
+                        "aplicativo": "SGA",
+                        "accion": "Ingresar a Consulta Histórica y revisar Detalle de Solicitud.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 3,
+                        "aplicativo": "SGA",
+                        "accion": "Obtener el Customer ID correspondiente.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 4,
+                        "aplicativo": "Incognito",
+                        "accion": "Validar que los servicios y equipos esperados se encuentren activos.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 5,
+                        "aplicativo": "Incognito",
+                        "accion": "Revisar los niveles según la tecnología.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    }
+                ],
+                "precondiciones": [
+                    "La SOT debe corresponder al caso que se está validando.",
+                    "La actividad debe encontrarse iniciada."
+                ],
+                "verificaciones": [
+                    "Detalle de Solicitud",
+                    "Customer ID",
+                    "Estado de servicios y equipos",
+                    "Niveles"
+                ],
+                "advertencias": [],
+                "accion_si_no_cumple": "Si la información no coincide o los niveles no cumplen, no continuar con la validación.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "VAL002",
             "dominio": "validacion",
             "titulo": "Validar servicios activos del cliente",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "FTTH",
-                "HFC"
-            ],
-            "aplicativos": [
-                "SGA",
-                "Incognito"
-            ],
-            "intenciones": [
-                "donde reviso los servicios activos",
-                "como veo si el servicio esta activo",
-                "donde valido los equipos activos"
-            ],
-            "palabras_clave": [
-                "servicios activos",
-                "equipos activos",
-                "customer id",
-                "incognito"
-            ],
-            "respuesta_corta": "Consulta los servicios y equipos del cliente en Incógnito utilizando el Customer ID.",
-            "pasos": [
-                {
-                    "orden": 1,
-                    "aplicativo": "SGA",
-                    "accion": "Revisar el Detalle de Solicitud para identificar los servicios esperados."
-                },
-                {
-                    "orden": 2,
-                    "aplicativo": "SGA",
-                    "accion": "Obtener el Customer ID."
-                },
-                {
-                    "orden": 3,
-                    "aplicativo": "Incognito",
-                    "accion": "Buscar el Customer ID y comprobar que los servicios y equipos esperados estén activos."
-                }
-            ],
-            "precondiciones": [],
-            "evidencias": [
-                "Customer ID",
-                "Servicios activos",
-                "Equipos activos"
-            ],
-            "accion_si_falla": "Si falta un servicio esperado o aparece inactivo, no continuar con la validación.",
-            "advertencias": [],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "FTTH",
+                    "HFC"
+                ],
+                "aplicativos": [
+                    "SGA",
+                    "Incognito"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "donde reviso los servicios activos",
+                    "como veo si el servicio esta activo",
+                    "donde valido los equipos activos"
+                ],
+                "palabras_clave": [
+                    "servicios activos",
+                    "equipos activos",
+                    "customer id",
+                    "incognito"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Consulta los servicios y equipos del cliente en Incógnito utilizando el Customer ID.",
+                "pasos": [
+                    {
+                        "orden": 1,
+                        "aplicativo": "SGA",
+                        "accion": "Revisar el Detalle de Solicitud para identificar los servicios esperados.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 2,
+                        "aplicativo": "SGA",
+                        "accion": "Obtener el Customer ID.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 3,
+                        "aplicativo": "Incognito",
+                        "accion": "Buscar el Customer ID y comprobar que los servicios y equipos esperados estén activos.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    }
+                ],
+                "precondiciones": [],
+                "verificaciones": [
+                    "Customer ID",
+                    "Servicios activos",
+                    "Equipos activos"
+                ],
+                "advertencias": [],
+                "accion_si_no_cumple": "Si falta un servicio esperado o aparece inactivo, no continuar con la validación.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "VAL003",
             "dominio": "validacion",
             "titulo": "Validar niveles FTTH",
-            "tipo_sot": [
-                "instalacion",
-                "migracion",
-                "mantenimiento"
-            ],
-            "tecnologia": [
-                "FTTH"
-            ],
-            "aplicativos": [
-                "Incognito",
-                "Sistema Multigestion"
-            ],
-            "intenciones": [
-                "como valido los niveles ftth",
-                "donde veo receiving power",
-                "como reviso la señal ftth"
-            ],
-            "palabras_clave": [
-                "FTTH",
-                "receiving power",
-                "nivel",
-                "niveles",
-                "fibra",
-                "señal"
-            ],
-            "respuesta_corta": "Revisa Receiving Power en Incógnito y evalúa el valor en Sistema Multigestión.",
-            "pasos": [
-                {
-                    "orden": 1,
-                    "aplicativo": "Incognito",
-                    "accion": "Ingresar al equipo FTTH del cliente."
-                },
-                {
-                    "orden": 2,
-                    "aplicativo": "Incognito",
-                    "accion": "Identificar el valor Receiving Power."
-                },
-                {
-                    "orden": 3,
-                    "aplicativo": "Sistema Multigestion",
-                    "accion": "Evaluar el valor obtenido según el procedimiento vigente."
-                }
-            ],
-            "precondiciones": [
-                "El equipo FTTH debe aparecer en Incógnito."
-            ],
-            "evidencias": [
-                "Receiving Power"
-            ],
-            "accion_si_falla": "No validar mientras el nivel se encuentre fuera del rango aceptado.",
-            "advertencias": [
-                "Los rangos numéricos deben ser ingresados únicamente cuando hayan sido confirmados."
-            ],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "instalacion",
+                    "migracion",
+                    "mantenimiento"
+                ],
+                "tecnologia": [
+                    "FTTH"
+                ],
+                "aplicativos": [
+                    "Incognito",
+                    "Sistema Multigestion"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "como valido los niveles ftth",
+                    "donde veo receiving power",
+                    "como reviso la señal ftth"
+                ],
+                "palabras_clave": [
+                    "FTTH",
+                    "receiving power",
+                    "nivel",
+                    "niveles",
+                    "fibra",
+                    "señal"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Revisa Receiving Power en Incógnito y evalúa el valor en Sistema Multigestión.",
+                "pasos": [
+                    {
+                        "orden": 1,
+                        "aplicativo": "Incognito",
+                        "accion": "Ingresar al equipo FTTH del cliente.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 2,
+                        "aplicativo": "Incognito",
+                        "accion": "Identificar el valor Receiving Power.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 3,
+                        "aplicativo": "Sistema Multigestion",
+                        "accion": "Evaluar el valor obtenido según el procedimiento vigente.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    }
+                ],
+                "precondiciones": [
+                    "El equipo FTTH debe aparecer en Incógnito."
+                ],
+                "verificaciones": [
+                    "Receiving Power"
+                ],
+                "advertencias": [
+                    "Los rangos numéricos deben ser ingresados únicamente cuando hayan sido confirmados."
+                ],
+                "accion_si_no_cumple": "No validar mientras el nivel se encuentre fuera del rango aceptado.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "VAL004",
             "dominio": "validacion",
             "titulo": "Validar niveles HFC",
-            "tipo_sot": [
-                "instalacion",
-                "mantenimiento",
-                "postventa"
-            ],
-            "tecnologia": [
-                "HFC"
-            ],
-            "aplicativos": [
-                "Incognito",
-                "Hygeia",
-                "Sistema Multigestion"
-            ],
-            "intenciones": [
-                "como valido niveles hfc",
-                "donde reviso la señal hfc",
-                "como ingreso a hygeia"
-            ],
-            "palabras_clave": [
-                "HFC",
-                "Hygeia",
-                "niveles",
-                "señal"
-            ],
-            "respuesta_corta": "Consulta los niveles HFC en Hygeia y evalúalos según el procedimiento vigente.",
-            "pasos": [
-                {
-                    "orden": 1,
-                    "aplicativo": "Incognito",
-                    "accion": "Ingresar al equipo HFC."
-                },
-                {
-                    "orden": 2,
-                    "aplicativo": "Hygeia",
-                    "accion": "Consultar los niveles técnicos."
-                },
-                {
-                    "orden": 3,
-                    "aplicativo": "Sistema Multigestion",
-                    "accion": "Evaluar los valores obtenidos."
-                }
-            ],
-            "precondiciones": [
-                "El equipo HFC debe estar visible."
-            ],
-            "evidencias": [
-                "Niveles técnicos"
-            ],
-            "accion_si_falla": "No validar cuando los niveles no sean aceptables.",
-            "advertencias": [
-                "No se ingresan rangos numéricos no confirmados."
-            ],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "instalacion",
+                    "mantenimiento",
+                    "postventa"
+                ],
+                "tecnologia": [
+                    "HFC"
+                ],
+                "aplicativos": [
+                    "Incognito",
+                    "Hygeia",
+                    "Sistema Multigestion"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "como valido niveles hfc",
+                    "donde reviso la señal hfc",
+                    "como ingreso a hygeia"
+                ],
+                "palabras_clave": [
+                    "HFC",
+                    "Hygeia",
+                    "niveles",
+                    "señal"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Consulta los niveles HFC en Hygeia y evalúalos según el procedimiento vigente.",
+                "pasos": [
+                    {
+                        "orden": 1,
+                        "aplicativo": "Incognito",
+                        "accion": "Ingresar al equipo HFC.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 2,
+                        "aplicativo": "Hygeia",
+                        "accion": "Consultar los niveles técnicos.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 3,
+                        "aplicativo": "Sistema Multigestion",
+                        "accion": "Evaluar los valores obtenidos.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    }
+                ],
+                "precondiciones": [
+                    "El equipo HFC debe estar visible."
+                ],
+                "verificaciones": [
+                    "Niveles técnicos"
+                ],
+                "advertencias": [
+                    "No se ingresan rangos numéricos no confirmados."
+                ],
+                "accion_si_no_cumple": "No validar cuando los niveles no sean aceptables.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "REP001",
             "dominio": "reprogramacion",
             "titulo": "Reprogramar una SOT",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "todas"
-            ],
-            "aplicativos": [
-                "SGA"
-            ],
-            "intenciones": [
-                "como reprogramo una sot",
-                "donde cambio la fecha de la sot",
-                "como reagendo una visita",
-                "como cambiar la fecha"
-            ],
-            "palabras_clave": [
-                "reprogramar",
-                "reagendar",
-                "cambiar fecha",
-                "agendamiento",
-                "control de tareas"
-            ],
-            "respuesta_corta": "La reprogramación se realiza en Control de Tareas > Agendamiento y debe finalizar cambiando el estado.",
-            "pasos": [
-                {
-                    "orden": 1,
-                    "aplicativo": "SGA",
-                    "accion": "Ingresar a Control de Tareas."
-                },
-                {
-                    "orden": 2,
-                    "aplicativo": "SGA",
-                    "accion": "Localizar la SOT."
-                },
-                {
-                    "orden": 3,
-                    "aplicativo": "SGA",
-                    "accion": "Ingresar a Agendamiento."
-                },
-                {
-                    "orden": 4,
-                    "aplicativo": "SGA",
-                    "accion": "Seleccionar la nueva fecha y franja."
-                },
-                {
-                    "orden": 5,
-                    "aplicativo": "SGA",
-                    "accion": "Cambiar el estado a Reagendado por Cliente o Reagendado por Claro según corresponda."
-                },
-                {
-                    "orden": 6,
-                    "aplicativo": "SGA",
-                    "accion": "Registrar la plantilla correspondiente."
-                }
-            ],
-            "precondiciones": [
-                "Revisar el motivo de la reprogramación.",
-                "Verificar la dilación antes de seleccionar una nueva fecha."
-            ],
-            "evidencias": [
-                "Motivo de reprogramación",
-                "Registro de coordinación"
-            ],
-            "accion_si_falla": "No finalizar una reprogramación sin actualizar el estado de agendamiento.",
-            "advertencias": [
-                "La dilación máxima indicada en capacitación es de 7 días calendario."
-            ],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "todas"
+                ],
+                "aplicativos": [
+                    "SGA"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "como reprogramo una sot",
+                    "donde cambio la fecha de la sot",
+                    "como reagendo una visita",
+                    "como cambiar la fecha"
+                ],
+                "palabras_clave": [
+                    "reprogramar",
+                    "reagendar",
+                    "cambiar fecha",
+                    "agendamiento",
+                    "control de tareas"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "La reprogramación se realiza en Control de Tareas > Agendamiento y debe finalizar cambiando el estado.",
+                "pasos": [
+                    {
+                        "orden": 1,
+                        "aplicativo": "SGA",
+                        "accion": "Ingresar a Control de Tareas.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 2,
+                        "aplicativo": "SGA",
+                        "accion": "Localizar la SOT.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 3,
+                        "aplicativo": "SGA",
+                        "accion": "Ingresar a Agendamiento.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 4,
+                        "aplicativo": "SGA",
+                        "accion": "Seleccionar la nueva fecha y franja.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 5,
+                        "aplicativo": "SGA",
+                        "accion": "Cambiar el estado a Reagendado por Cliente o Reagendado por Claro según corresponda.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 6,
+                        "aplicativo": "SGA",
+                        "accion": "Registrar la plantilla correspondiente.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    }
+                ],
+                "precondiciones": [
+                    "Revisar el motivo de la reprogramación.",
+                    "Verificar la dilación antes de seleccionar una nueva fecha."
+                ],
+                "verificaciones": [
+                    "Motivo de reprogramación",
+                    "Registro de coordinación"
+                ],
+                "advertencias": [
+                    "La dilación máxima indicada en capacitación es de 7 días calendario."
+                ],
+                "accion_si_no_cumple": "No finalizar una reprogramación sin actualizar el estado de agendamiento.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "REP002",
             "dominio": "reprogramacion",
             "titulo": "Reagendado por Cliente",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "todas"
-            ],
-            "aplicativos": [
-                "SGA"
-            ],
-            "intenciones": [
-                "el cliente quiere cambiar la fecha",
-                "cliente solicita otra fecha",
-                "cliente quiere reagendar",
-                "cliente cambia horario"
-            ],
-            "palabras_clave": [
-                "cliente",
-                "cambiar fecha",
-                "otra fecha",
-                "reagendar cliente"
-            ],
-            "respuesta_corta": "Si el cliente solicita expresamente cambiar la fecha o franja, corresponde Reagendado por Cliente.",
-            "pasos": [],
-            "precondiciones": [
-                "Confirmar que la solicitud de cambio proviene del cliente."
-            ],
-            "evidencias": [
-                "Motivo comunicado por el cliente."
-            ],
-            "accion_si_falla": "No utilizar esta clasificación si la causa corresponde a una incidencia operativa.",
-            "advertencias": [],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "todas"
+                ],
+                "aplicativos": [
+                    "SGA"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "el cliente quiere cambiar la fecha",
+                    "cliente solicita otra fecha",
+                    "cliente quiere reagendar",
+                    "cliente cambia horario"
+                ],
+                "palabras_clave": [
+                    "cliente",
+                    "cambiar fecha",
+                    "otra fecha",
+                    "reagendar cliente"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Si el cliente solicita expresamente cambiar la fecha o franja, corresponde Reagendado por Cliente.",
+                "pasos": [],
+                "precondiciones": [
+                    "Confirmar que la solicitud de cambio proviene del cliente."
+                ],
+                "verificaciones": [
+                    "Motivo comunicado por el cliente."
+                ],
+                "advertencias": [],
+                "accion_si_no_cumple": "No utilizar esta clasificación si la causa corresponde a una incidencia operativa.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "REP003",
             "dominio": "reprogramacion",
             "titulo": "Reagendado por Claro",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "todas"
-            ],
-            "aplicativos": [
-                "SGA"
-            ],
-            "intenciones": [
-                "no hay cuadrillas",
-                "tecnico llego tarde",
-                "falta stock",
-                "falta material",
-                "problema operativo"
-            ],
-            "palabras_clave": [
-                "cuadrilla",
-                "tecnico tarde",
-                "fuera de franja",
-                "stock",
-                "material",
-                "equipo",
-                "claro"
-            ],
-            "respuesta_corta": "Cuando la causa depende de Claro, la contratista o el técnico, corresponde Reagendado por Claro.",
-            "pasos": [],
-            "precondiciones": [],
-            "evidencias": [
-                "Motivo operativo de la reprogramación."
-            ],
-            "accion_si_falla": "",
-            "advertencias": [],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "todas"
+                ],
+                "aplicativos": [
+                    "SGA"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "no hay cuadrillas",
+                    "tecnico llego tarde",
+                    "falta stock",
+                    "falta material",
+                    "problema operativo"
+                ],
+                "palabras_clave": [
+                    "cuadrilla",
+                    "tecnico tarde",
+                    "fuera de franja",
+                    "stock",
+                    "material",
+                    "equipo",
+                    "claro"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Cuando la causa depende de Claro, la contratista o el técnico, corresponde Reagendado por Claro.",
+                "pasos": [],
+                "precondiciones": [],
+                "verificaciones": [
+                    "Motivo operativo de la reprogramación."
+                ],
+                "advertencias": [],
+                "accion_si_no_cumple": "",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "REP004",
             "dominio": "reprogramacion",
             "titulo": "Franjas regulares de atención",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "todas"
-            ],
-            "aplicativos": [
-                "SGA",
-                "TOA"
-            ],
-            "intenciones": [
-                "cuales son las franjas",
-                "horarios de visita",
-                "que horario es am1",
-                "que horario es pm2"
-            ],
-            "palabras_clave": [
-                "AM1",
-                "AM2",
-                "PM1",
-                "PM2",
-                "franja",
-                "horario"
-            ],
-            "respuesta_corta": "AM1: 09:00-11:00; AM2: 11:00-13:00; PM1: 14:00-16:00; PM2: 16:00-18:00.",
-            "pasos": [],
-            "precondiciones": [],
-            "evidencias": [],
-            "accion_si_falla": "",
-            "advertencias": [],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "todas"
+                ],
+                "aplicativos": [
+                    "SGA",
+                    "TOA"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "cuales son las franjas",
+                    "horarios de visita",
+                    "que horario es am1",
+                    "que horario es pm2"
+                ],
+                "palabras_clave": [
+                    "AM1",
+                    "AM2",
+                    "PM1",
+                    "PM2",
+                    "franja",
+                    "horario"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "AM1: 09:00-11:00; AM2: 11:00-13:00; PM1: 14:00-16:00; PM2: 16:00-18:00.",
+                "pasos": [],
+                "precondiciones": [],
+                "verificaciones": [],
+                "advertencias": [],
+                "accion_si_no_cumple": "",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "REP005",
             "dominio": "reprogramacion",
             "titulo": "Franjas especiales AM0 y PM3",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "todas"
-            ],
-            "aplicativos": [
-                "SGA"
-            ],
-            "intenciones": [
-                "puedo ofrecer am0",
-                "puedo ofrecer pm3",
-                "cliente quiere 7 am",
-                "cliente quiere 6 pm"
-            ],
-            "palabras_clave": [
-                "AM0",
-                "PM3",
-                "7 am",
-                "18:00",
-                "franja especial"
-            ],
-            "respuesta_corta": "AM0 corresponde a 07:00-09:00 y PM3 a 18:00-20:00. Son franjas especiales y requieren coordinación según el procedimiento.",
-            "pasos": [],
-            "precondiciones": [
-                "Debe existir coordinación o autorización según el escenario."
-            ],
-            "evidencias": [],
-            "accion_si_falla": "No asignar una franja especial sin la coordinación requerida.",
-            "advertencias": [
-                "No deben ofrecerse proactivamente como franjas regulares."
-            ],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "todas"
+                ],
+                "aplicativos": [
+                    "SGA"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "puedo ofrecer am0",
+                    "puedo ofrecer pm3",
+                    "cliente quiere 7 am",
+                    "cliente quiere 6 pm"
+                ],
+                "palabras_clave": [
+                    "AM0",
+                    "PM3",
+                    "7 am",
+                    "18:00",
+                    "franja especial"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "AM0 corresponde a 07:00-09:00 y PM3 a 18:00-20:00. Son franjas especiales y requieren coordinación según el procedimiento.",
+                "pasos": [],
+                "precondiciones": [
+                    "Debe existir coordinación o autorización según el escenario."
+                ],
+                "verificaciones": [],
+                "advertencias": [
+                    "No deben ofrecerse proactivamente como franjas regulares."
+                ],
+                "accion_si_no_cumple": "No asignar una franja especial sin la coordinación requerida.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "REP006",
             "dominio": "reprogramacion",
             "titulo": "Dilación máxima de una SOT",
-            "tipo_sot": [
-                "general"
-            ],
-            "tecnologia": [
-                "todas"
-            ],
-            "aplicativos": [
-                "SGA"
-            ],
-            "intenciones": [
-                "cual es la dilacion maxima",
-                "cuantos dias puede tener una sot",
-                "hasta cuantos dias puedo reprogramar"
-            ],
-            "palabras_clave": [
-                "dilacion",
-                "7 dias",
-                "fecha de creacion",
-                "reprogramacion"
-            ],
-            "respuesta_corta": "La dilación máxima indicada en capacitación es de 7 días calendario desde la creación de la SOT.",
-            "pasos": [],
-            "precondiciones": [],
-            "evidencias": [
-                "Fecha de creación de la SOT."
-            ],
-            "accion_si_falla": "No programar una fecha que exceda el límite establecido.",
-            "advertencias": [],
-            "fuente_interna": "Capacitación operativa",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "general"
+                ],
+                "tecnologia": [
+                    "todas"
+                ],
+                "aplicativos": [
+                    "SGA"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "cual es la dilacion maxima",
+                    "cuantos dias puede tener una sot",
+                    "hasta cuantos dias puedo reprogramar"
+                ],
+                "palabras_clave": [
+                    "dilacion",
+                    "7 dias",
+                    "fecha de creacion",
+                    "reprogramacion"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "La dilación máxima indicada en capacitación es de 7 días calendario desde la creación de la SOT.",
+                "pasos": [],
+                "precondiciones": [],
+                "verificaciones": [
+                    "Fecha de creación de la SOT."
+                ],
+                "advertencias": [],
+                "accion_si_no_cumple": "No programar una fecha que exceda el límite establecido.",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": "Capacitación operativa"
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         },
         {
             "id": "VAL005",
             "dominio": "validacion",
             "titulo": "Procedimiento de prueba",
-            "tipo_sot": [
-                "mantenimiento"
-            ],
-            "tecnologia": [
-                "HFC"
-            ],
-            "aplicativos": [
-                "SGA",
-                "Incognito"
-            ],
-            "intenciones": [
-                "como hago una prueba",
-                "como valido la prueba"
-            ],
-            "palabras_clave": [
-                "prueba",
-                "validacion",
-                "mantenimiento"
-            ],
-            "respuesta_corta": "Este es un procedimiento temporal de prueba.",
-            "pasos": [
-                {
-                    "orden": 1,
-                    "aplicativo": "SGA",
-                    "accion": "Ingresar al sistema."
-                },
-                {
-                    "orden": 2,
-                    "aplicativo": "Incognito",
-                    "accion": "Validar la información."
-                }
-            ],
-            "precondiciones": [],
-            "evidencias": [],
-            "accion_si_falla": "",
-            "advertencias": [],
-            "fuente_interna": "",
-            "activo": true
+            "clasificacion": {
+                "tipo_sot": [
+                    "mantenimiento"
+                ],
+                "tecnologia": [
+                    "HFC"
+                ],
+                "aplicativos": [
+                    "SGA",
+                    "Incognito"
+                ]
+            },
+            "busqueda": {
+                "consultas_ejemplo": [
+                    "como hago una prueba",
+                    "como valido la prueba"
+                ],
+                "palabras_clave": [
+                    "prueba",
+                    "validacion",
+                    "mantenimiento"
+                ],
+                "sinonimos": []
+            },
+            "respuesta": {
+                "resumen": "Este es un procedimiento temporal de prueba.",
+                "pasos": [
+                    {
+                        "orden": 1,
+                        "aplicativo": "SGA",
+                        "accion": "Ingresar al sistema.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    },
+                    {
+                        "orden": 2,
+                        "aplicativo": "Incognito",
+                        "accion": "Validar la información.",
+                        "validacion": "",
+                        "si_no_cumple": ""
+                    }
+                ],
+                "precondiciones": [],
+                "verificaciones": [],
+                "advertencias": [],
+                "accion_si_no_cumple": "",
+                "escalamiento": ""
+            },
+            "fuente": {
+                "tipo": "Capacitación interna",
+                "referencia": ""
+            },
+            "control": {
+                "activo": true,
+                "validado": false,
+                "fecha_creacion": "2026-10-02",
+                "fecha_actualizacion": "2026-10-02"
+            }
         }
     ],
     "codigos_mantenimiento": [],
     "configuracion": {
         "respuesta_sin_resultado": "No encuentro información confirmada para esta consulta. Verifica el caso con tu supervisor.",
         "max_resultados": 5,
-        "permitir_respuestas_solo_con_base": true
+        "solo_procedimientos_activos": true,
+        "solo_informacion_validada": false
     }
 }

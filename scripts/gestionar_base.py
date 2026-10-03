@@ -8,35 +8,75 @@ from datetime import datetime
 # RUTAS
 # ==========================================================
 
-RAIZ = Path(__file__).resolve().parent.parent
-ARCHIVO_BD = RAIZ / "data" / "base_conocimiento.json"
+RAIZ = (
+    Path(__file__)
+    .resolve()
+    .parent
+    .parent
+)
+
+ARCHIVO_BD = (
+    RAIZ
+    / "data"
+    / "base_conocimiento.json"
+)
 
 
 # ==========================================================
-# CARGAR Y GUARDAR BASE
+# UTILIDADES GENERALES
 # ==========================================================
+
+def fecha_actual():
+
+    return datetime.now().strftime(
+        "%Y-%m-%d"
+    )
+
 
 def cargar_base():
 
     if not ARCHIVO_BD.exists():
-        print("\nERROR: No existe base_conocimiento.json")
-        print("Ejecuta primero:")
-        print("python scripts/crear_base.py")
+
+        print(
+            "\nERROR: No existe "
+            "base_conocimiento.json"
+        )
+
         return None
 
-    with open(
-        ARCHIVO_BD,
-        "r",
-        encoding="utf-8"
-    ) as archivo:
-        return json.load(archivo)
+    try:
+
+        with open(
+            ARCHIVO_BD,
+            "r",
+            encoding="utf-8"
+        ) as archivo:
+
+            return json.load(
+                archivo
+            )
+
+    except json.JSONDecodeError as error:
+
+        print(
+            "\nERROR EN JSON:"
+        )
+
+        print(
+            f"Línea {error.lineno}, "
+            f"columna {error.colno}"
+        )
+
+        return None
 
 
 def guardar_base(base):
 
-    base["metadata"]["ultima_actualizacion"] = (
-        datetime.now().strftime("%Y-%m-%d")
-    )
+    base[
+        "metadata"
+    ][
+        "ultima_actualizacion"
+    ] = fecha_actual()
 
     with open(
         ARCHIVO_BD,
@@ -51,402 +91,423 @@ def guardar_base(base):
             indent=4
         )
 
-    print("\nCambios guardados correctamente.")
+    print(
+        "\n✅ Cambios guardados."
+    )
 
-
-# ==========================================================
-# UTILIDADES
-# ==========================================================
 
 def normalizar(texto):
 
-    texto = str(texto).lower().strip()
+    texto = str(
+        texto
+    ).lower().strip()
 
     texto = "".join(
         caracter
-        for caracter in unicodedata.normalize("NFD", texto)
-        if unicodedata.category(caracter) != "Mn"
+        for caracter
+        in unicodedata.normalize(
+            "NFD",
+            texto
+        )
+        if unicodedata.category(
+            caracter
+        ) != "Mn"
     )
 
     return texto
 
 
-def pedir_lista(mensaje, separador=","):
+def pedir_lista(
+    mensaje,
+    separador=","
+):
 
-    valor = input(mensaje).strip()
+    texto = input(
+        mensaje
+    ).strip()
 
-    if not valor:
+    if not texto:
+
         return []
 
     return [
         elemento.strip()
-        for elemento in valor.split(separador)
+        for elemento
+        in texto.split(
+            separador
+        )
         if elemento.strip()
     ]
 
 
-def pedir_si_no(mensaje):
+def pedir_si_no(
+    mensaje
+):
 
     while True:
 
-        respuesta = input(
+        opcion = input(
             f"{mensaje} (s/n): "
         ).strip().lower()
 
-        if respuesta in ["s", "n"]:
-            return respuesta == "s"
+        if opcion == "s":
+            return True
 
-        print("Ingresa solamente s o n.")
+        if opcion == "n":
+            return False
+
+        print(
+            "Solo ingresa s o n."
+        )
 
 
 def pausar():
-    input("\nPresiona ENTER para continuar...")
+
+    input(
+        "\nPresiona ENTER "
+        "para continuar..."
+    )
 
 
 # ==========================================================
-# IDs AUTOMÁTICOS
+# IDENTIFICADORES
 # ==========================================================
 
-def obtener_prefijo(dominio):
+def prefijo_por_dominio(
+    dominio
+):
 
     mapa = {
+
         "validacion": "VAL",
+
         "reprogramacion": "REP",
+
         "rechazo": "REC",
+
         "activacion": "ACT",
-        "instalacion": "INS",
+
         "mantenimiento": "MAN",
-        "programacion": "PRO",
-        "migracion": "MIG"
+
+        "instalacion": "INS",
+
+        "migracion": "MIG",
+
+        "programacion": "PRO"
     }
 
     return mapa.get(
-        normalizar(dominio),
+        normalizar(
+            dominio
+        ),
         "GEN"
     )
 
 
-def siguiente_id(base, dominio):
+def siguiente_id(
+    base,
+    dominio
+):
 
-    prefijo = obtener_prefijo(dominio)
+    prefijo = (
+        prefijo_por_dominio(
+            dominio
+        )
+    )
 
     numeros = []
 
-    for procedimiento in base["procedimientos"]:
-
-        identificador = procedimiento.get(
-            "id",
-            ""
+    for procedimiento in (
+        base.get(
+            "procedimientos",
+            []
         )
+    ):
 
-        if identificador.startswith(prefijo):
-
-            numero = identificador.replace(
-                prefijo,
-                ""
-            )
-
-            if numero.isdigit():
-                numeros.append(int(numero))
-
-    siguiente = max(numeros, default=0) + 1
-
-    return f"{prefijo}{siguiente:03d}"
-
-
-# ==========================================================
-# VALIDACIONES
-# ==========================================================
-
-def validar_procedimiento(procedimiento):
-
-    errores = []
-
-    if not procedimiento.get("titulo"):
-        errores.append(
-            "El procedimiento no tiene título."
-        )
-
-    if not procedimiento.get("dominio"):
-        errores.append(
-            "El procedimiento no tiene dominio."
-        )
-
-    if not procedimiento.get("respuesta_corta"):
-        errores.append(
-            "El procedimiento no tiene respuesta corta."
-        )
-
-    if not procedimiento.get("palabras_clave"):
-        errores.append(
-            "No tiene palabras clave."
-        )
-
-    if not procedimiento.get("intenciones"):
-        errores.append(
-            "No tiene ejemplos de preguntas."
-        )
-
-    return errores
-
-
-# ==========================================================
-# LISTAR PROCEDIMIENTOS
-# ==========================================================
-
-def listar_procedimientos(base):
-
-    procedimientos = base["procedimientos"]
-
-    if not procedimientos:
-
-        print(
-            "\nNo hay procedimientos registrados."
-        )
-
-        return
-
-    print("\n")
-    print("=" * 90)
-    print("PROCEDIMIENTOS REGISTRADOS")
-    print("=" * 90)
-
-    for procedimiento in procedimientos:
-
-        estado = (
-            "ACTIVO"
-            if procedimiento.get(
-                "activo",
-                True
-            )
-            else "INACTIVO"
-        )
-
-        print(
-            f"{procedimiento['id']:<8}"
-            f"{procedimiento['dominio']:<20}"
-            f"{procedimiento['titulo']:<50}"
-            f"{estado}"
-        )
-
-
-# ==========================================================
-# BUSCAR PROCEDIMIENTO
-# ==========================================================
-
-def buscar_procedimientos(base):
-
-    consulta = input(
-        "\nIngrese texto a buscar: "
-    ).strip()
-
-    consulta = normalizar(consulta)
-
-    resultados = []
-
-    for procedimiento in base["procedimientos"]:
-
-        contenido = []
-
-        contenido.append(
+        identificador = (
             procedimiento.get(
                 "id",
                 ""
             )
         )
 
-        contenido.append(
-            procedimiento.get(
-                "titulo",
-                ""
-            )
+        if identificador.startswith(
+            prefijo
+        ):
+
+            numero = identificador[
+                len(prefijo):
+            ]
+
+            if numero.isdigit():
+
+                numeros.append(
+                    int(numero)
+                )
+
+    siguiente = (
+        max(
+            numeros,
+            default=0
         )
+        + 1
+    )
 
-        contenido.append(
-            procedimiento.get(
-                "dominio",
-                ""
-            )
-        )
-
-        contenido.extend(
-            procedimiento.get(
-                "palabras_clave",
-                []
-            )
-        )
-
-        contenido.extend(
-            procedimiento.get(
-                "intenciones",
-                []
-            )
-        )
-
-        contenido.extend(
-            procedimiento.get(
-                "aplicativos",
-                []
-            )
-        )
-
-        texto_total = normalizar(
-            " ".join(contenido)
-        )
-
-        if consulta in texto_total:
-            resultados.append(
-                procedimiento
-            )
-
-    if not resultados:
-
-        print(
-            "\nNo se encontraron coincidencias."
-        )
-
-        return []
-
-    print("\nRESULTADOS:\n")
-
-    for procedimiento in resultados:
-
-        print(
-            f"{procedimiento['id']} - "
-            f"{procedimiento['titulo']}"
-        )
-
-    return resultados
+    return (
+        f"{prefijo}"
+        f"{siguiente:03d}"
+    )
 
 
 # ==========================================================
-# OBTENER PROCEDIMIENTO POR ID
+# BUSCAR PROCEDIMIENTO POR ID
 # ==========================================================
 
-def obtener_procedimiento(base, id_busqueda):
+def obtener_procedimiento(
+    base,
+    identificador
+):
 
-    for procedimiento in base["procedimientos"]:
+    for procedimiento in (
+        base.get(
+            "procedimientos",
+            []
+        )
+    ):
 
         if (
-            procedimiento.get("id", "").upper()
+            procedimiento.get(
+                "id",
+                ""
+            ).upper()
             ==
-            id_busqueda.upper()
+            identificador.upper()
         ):
+
             return procedimiento
 
     return None
 
 
 # ==========================================================
-# MOSTRAR PROCEDIMIENTO COMPLETO
+# LISTAR PROCEDIMIENTOS
 # ==========================================================
 
-def mostrar_procedimiento(procedimiento):
+def listar_procedimientos(
+    base
+):
 
-    print("\n")
+    procedimientos = (
+        base.get(
+            "procedimientos",
+            []
+        )
+    )
+
+    print()
+    print("=" * 100)
+    print(
+        "PROCEDIMIENTOS REGISTRADOS"
+    )
+    print("=" * 100)
+
+    if not procedimientos:
+
+        print(
+            "No hay procedimientos."
+        )
+
+        return
+
+    for procedimiento in (
+        procedimientos
+    ):
+
+        control = (
+            procedimiento.get(
+                "control",
+                {}
+            )
+        )
+
+        activo = (
+            "ACTIVO"
+            if control.get(
+                "activo",
+                True
+            )
+            else "INACTIVO"
+        )
+
+        validado = (
+            "VALIDADO"
+            if control.get(
+                "validado",
+                False
+            )
+            else "PENDIENTE"
+        )
+
+        print(
+            f"{procedimiento.get('id', ''):<8}"
+            f"{procedimiento.get('dominio', ''):<20}"
+            f"{procedimiento.get('titulo', ''):<45}"
+            f"{activo:<12}"
+            f"{validado}"
+        )
+
+
+# ==========================================================
+# MOSTRAR PROCEDIMIENTO
+# ==========================================================
+
+def mostrar_lista(
+    titulo,
+    elementos
+):
+
+    print(
+        f"\n{titulo}:"
+    )
+
+    if not elementos:
+
+        print(
+            "- Sin información"
+        )
+
+        return
+
+    for elemento in elementos:
+
+        print(
+            f"- {elemento}"
+        )
+
+
+def mostrar_procedimiento(
+    procedimiento
+):
+
+    print()
     print("=" * 80)
+
     print(
-        f"{procedimiento['id']} - "
-        f"{procedimiento['titulo']}"
+        f"{procedimiento.get('id', '')} "
+        f"- "
+        f"{procedimiento.get('titulo', '')}"
     )
+
     print("=" * 80)
 
     print(
-        f"\nDominio: "
-        f"{procedimiento.get('dominio', '')}"
-    )
-
-    print(
-        "Tipo de SOT: "
-        + ", ".join(
-            procedimiento.get(
-                "tipo_sot",
-                []
-            )
-        )
-    )
-
-    print(
-        "Tecnología: "
-        + ", ".join(
-            procedimiento.get(
-                "tecnologia",
-                []
-            )
-        )
-    )
-
-    print(
-        "Aplicativos: "
-        + ", ".join(
-            procedimiento.get(
-                "aplicativos",
-                []
-            )
-        )
-    )
-
-    print(
-        "\nRespuesta corta:"
-    )
-
-    print(
+        "\nDominio:",
         procedimiento.get(
-            "respuesta_corta",
+            "dominio",
+            ""
+        )
+    )
+
+    clasificacion = (
+        procedimiento.get(
+            "clasificacion",
+            {}
+        )
+    )
+
+    mostrar_lista(
+        "Tipo de SOT",
+        clasificacion.get(
+            "tipo_sot",
+            []
+        )
+    )
+
+    mostrar_lista(
+        "Tecnología",
+        clasificacion.get(
+            "tecnologia",
+            []
+        )
+    )
+
+    mostrar_lista(
+        "Aplicativos",
+        clasificacion.get(
+            "aplicativos",
+            []
+        )
+    )
+
+    busqueda = procedimiento.get(
+        "busqueda",
+        {}
+    )
+
+    mostrar_lista(
+        "Consultas de ejemplo",
+        busqueda.get(
+            "consultas_ejemplo",
+            []
+        )
+    )
+
+    mostrar_lista(
+        "Palabras clave",
+        busqueda.get(
+            "palabras_clave",
+            []
+        )
+    )
+
+    mostrar_lista(
+        "Sinónimos",
+        busqueda.get(
+            "sinonimos",
+            []
+        )
+    )
+
+    respuesta = procedimiento.get(
+        "respuesta",
+        {}
+    )
+
+    print(
+        "\nRespuesta:"
+    )
+
+    print(
+        respuesta.get(
+            "resumen",
             ""
         )
     )
 
     print(
-        "\nPalabras clave:"
-    )
-
-    for palabra in procedimiento.get(
-        "palabras_clave",
-        []
-    ):
-        print(f"- {palabra}")
-
-    print(
-        "\nEjemplos de preguntas:"
-    )
-
-    for pregunta in procedimiento.get(
-        "intenciones",
-        []
-    ):
-        print(f"- {pregunta}")
-
-    print(
-        "\nPrecondiciones:"
-    )
-
-    for condicion in procedimiento.get(
-        "precondiciones",
-        []
-    ):
-        print(f"- {condicion}")
-
-    print(
         "\nPasos:"
     )
 
-    pasos = procedimiento.get(
+    pasos = respuesta.get(
         "pasos",
         []
     )
 
-    if pasos:
+    if not pasos:
 
-        pasos_ordenados = sorted(
+        print(
+            "- Sin pasos registrados"
+        )
+
+    else:
+
+        for paso in sorted(
             pasos,
             key=lambda x: x.get(
                 "orden",
                 0
             )
-        )
-
-        for paso in pasos_ordenados:
+        ):
 
             print(
                 f"{paso.get('orden')}. "
@@ -454,86 +515,341 @@ def mostrar_procedimiento(procedimiento):
                 f"{paso.get('accion', '')}"
             )
 
-    else:
+            if paso.get(
+                "validacion"
+            ):
 
-        print(
-            "No hay pasos registrados."
+                print(
+                    "   Verificar: "
+                    f"{paso.get('validacion')}"
+                )
+
+            if paso.get(
+                "si_no_cumple"
+            ):
+
+                print(
+                    "   Si no cumple: "
+                    f"{paso.get('si_no_cumple')}"
+                )
+
+    mostrar_lista(
+        "Precondiciones",
+        respuesta.get(
+            "precondiciones",
+            []
         )
-
-    print(
-        "\nEvidencias:"
     )
 
-    for evidencia in procedimiento.get(
-        "evidencias",
-        []
-    ):
-        print(f"- {evidencia}")
+    mostrar_lista(
+        "Verificaciones",
+        respuesta.get(
+            "verificaciones",
+            []
+        )
+    )
 
-    print(
-        "\nAcción si falla:"
+    mostrar_lista(
+        "Advertencias",
+        respuesta.get(
+            "advertencias",
+            []
+        )
     )
 
     print(
-        procedimiento.get(
-            "accion_si_falla",
+        "\nAcción si no cumple:"
+    )
+
+    print(
+        respuesta.get(
+            "accion_si_no_cumple",
             ""
         )
+        or
+        "Sin información"
     )
 
     print(
-        "\nAdvertencias:"
-    )
-
-    for advertencia in procedimiento.get(
-        "advertencias",
-        []
-    ):
-        print(
-            f"- {advertencia}"
-        )
-
-    print(
-        "\nFuente interna:"
+        "\nEscalamiento:"
     )
 
     print(
-        procedimiento.get(
-            "fuente_interna",
+        respuesta.get(
+            "escalamiento",
             ""
         )
+        or
+        "Sin información"
+    )
+
+    fuente = procedimiento.get(
+        "fuente",
+        {}
     )
 
     print(
-        "\nEstado:",
-        "ACTIVO"
-        if procedimiento.get(
+        "\nFuente:"
+    )
+
+    print(
+        f"{fuente.get('tipo', '')} - "
+        f"{fuente.get('referencia', '')}"
+    )
+
+    control = procedimiento.get(
+        "control",
+        {}
+    )
+
+    print(
+        "\nActivo:",
+        control.get(
             "activo",
             True
         )
-        else "INACTIVO"
+    )
+
+    print(
+        "Validado:",
+        control.get(
+            "validado",
+            False
+        )
+    )
+
+    print(
+        "Fecha actualización:",
+        control.get(
+            "fecha_actualizacion",
+            ""
+        )
     )
 
 
 # ==========================================================
-# CREAR PROCEDIMIENTO
+# BUSCAR PROCEDIMIENTOS
 # ==========================================================
 
-def agregar_procedimiento(base):
+def buscar_procedimientos(
+    base
+):
 
-    print("\n")
+    consulta = input(
+        "\nTexto a buscar: "
+    ).strip()
+
+    consulta_normalizada = (
+        normalizar(
+            consulta
+        )
+    )
+
+    resultados = []
+
+    for procedimiento in (
+        base.get(
+            "procedimientos",
+            []
+        )
+    ):
+
+        contenido = [
+            procedimiento.get(
+                "id",
+                ""
+            ),
+            procedimiento.get(
+                "titulo",
+                ""
+            ),
+            procedimiento.get(
+                "dominio",
+                ""
+            )
+        ]
+
+        clasificacion = (
+            procedimiento.get(
+                "clasificacion",
+                {}
+            )
+        )
+
+        contenido.extend(
+            clasificacion.get(
+                "tipo_sot",
+                []
+            )
+        )
+
+        contenido.extend(
+            clasificacion.get(
+                "tecnologia",
+                []
+            )
+        )
+
+        contenido.extend(
+            clasificacion.get(
+                "aplicativos",
+                []
+            )
+        )
+
+        busqueda = procedimiento.get(
+            "busqueda",
+            {}
+        )
+
+        contenido.extend(
+            busqueda.get(
+                "consultas_ejemplo",
+                []
+            )
+        )
+
+        contenido.extend(
+            busqueda.get(
+                "palabras_clave",
+                []
+            )
+        )
+
+        contenido.extend(
+            busqueda.get(
+                "sinonimos",
+                []
+            )
+        )
+
+        texto_total = (
+            normalizar(
+                " ".join(
+                    contenido
+                )
+            )
+        )
+
+        if (
+            consulta_normalizada
+            in texto_total
+        ):
+
+            resultados.append(
+                procedimiento
+            )
+
+    print()
+
+    if not resultados:
+
+        print(
+            "No se encontraron "
+            "procedimientos."
+        )
+
+        return
+
+    for procedimiento in (
+        resultados
+    ):
+
+        print(
+            f"{procedimiento['id']} "
+            f"- "
+            f"{procedimiento['titulo']}"
+        )
+
+
+# ==========================================================
+# CREAR PASOS
+# ==========================================================
+
+def crear_pasos():
+
+    pasos = []
+
+    while True:
+
+        orden = len(
+            pasos
+        ) + 1
+
+        print(
+            f"\nPASO {orden}"
+        )
+
+        aplicativo = input(
+            "Aplicativo: "
+        ).strip()
+
+        accion = input(
+            "Acción: "
+        ).strip()
+
+        if not accion:
+
+            print(
+                "La acción es obligatoria."
+            )
+
+            continue
+
+        validacion = input(
+            "Qué verificar "
+            "(opcional): "
+        ).strip()
+
+        si_no_cumple = input(
+            "Qué hacer si no cumple "
+            "(opcional): "
+        ).strip()
+
+        pasos.append(
+            {
+                "orden": orden,
+                "aplicativo": aplicativo,
+                "accion": accion,
+                "validacion": validacion,
+                "si_no_cumple": (
+                    si_no_cumple
+                )
+            }
+        )
+
+        if not pedir_si_no(
+            "¿Agregar otro paso?"
+        ):
+
+            break
+
+    return pasos
+
+
+# ==========================================================
+# AGREGAR PROCEDIMIENTO
+# ==========================================================
+
+def agregar_procedimiento(
+    base
+):
+
+    print()
     print("=" * 60)
-    print("NUEVO PROCEDIMIENTO")
+    print(
+        "NUEVO PROCEDIMIENTO"
+    )
     print("=" * 60)
 
     dominio = input(
-        "\nDominio: "
+        "Dominio: "
     ).strip()
 
     if not dominio:
 
         print(
-            "El dominio es obligatorio."
+            "Dominio obligatorio."
         )
 
         return
@@ -545,76 +861,99 @@ def agregar_procedimiento(base):
     if not titulo:
 
         print(
-            "El título es obligatorio."
+            "Título obligatorio."
         )
 
         return
 
-    identificador = siguiente_id(
-        base,
-        dominio
+    identificador = (
+        siguiente_id(
+            base,
+            dominio
+        )
     )
 
     print(
-        f"\nID asignado automáticamente: "
+        f"\nID asignado: "
         f"{identificador}"
     )
 
     tipo_sot = pedir_lista(
-        "\nTipos de SOT separados por coma: "
+        "Tipos de SOT "
+        "separados por coma: "
     )
 
     tecnologia = pedir_lista(
-        "Tecnologías separadas por coma: "
+        "Tecnologías "
+        "separadas por coma: "
     )
 
     aplicativos = pedir_lista(
-        "Aplicativos separados por coma: "
+        "Aplicativos "
+        "separados por coma: "
     )
 
-    palabras_clave = pedir_lista(
-        "Palabras clave separadas por coma: "
-    )
-
-    print(
-        "\nEjemplos de preguntas."
-    )
-
-    print(
-        "Sepáralas utilizando |"
-    )
-
-    intenciones = pedir_lista(
-        "Preguntas: ",
+    consultas = pedir_lista(
+        "Ejemplos de preguntas "
+        "separados por |: ",
         "|"
     )
 
-    respuesta_corta = input(
-        "\nRespuesta corta: "
+    palabras = pedir_lista(
+        "Palabras clave "
+        "separadas por coma: "
+    )
+
+    sinonimos = pedir_lista(
+        "Sinónimos o expresiones "
+        "equivalentes separados "
+        "por coma: "
+    )
+
+    resumen = input(
+        "Respuesta resumida: "
     ).strip()
 
     precondiciones = pedir_lista(
-        "\nPrecondiciones separadas por |: ",
+        "Precondiciones "
+        "separadas por |: ",
         "|"
     )
 
-    evidencias = pedir_lista(
-        "Evidencias separadas por |: ",
+    verificaciones = pedir_lista(
+        "Verificaciones/evidencias "
+        "separadas por |: ",
         "|"
     )
-
-    accion_si_falla = input(
-        "Acción si falla: "
-    ).strip()
 
     advertencias = pedir_lista(
-        "Advertencias separadas por |: ",
+        "Advertencias "
+        "separadas por |: ",
         "|"
     )
 
-    fuente = input(
-        "Fuente interna: "
+    accion_no_cumple = input(
+        "Acción si no cumple: "
     ).strip()
+
+    escalamiento = input(
+        "Escalamiento "
+        "(opcional): "
+    ).strip()
+
+    referencia = input(
+        "Referencia de capacitación: "
+    ).strip()
+
+    pasos = []
+
+    if pedir_si_no(
+        "¿Registrar pasos?"
+    ):
+
+        pasos = crear_pasos()
+
+    fecha = fecha_actual()
 
     procedimiento = {
 
@@ -624,76 +963,77 @@ def agregar_procedimiento(base):
 
         "titulo": titulo,
 
-        "tipo_sot": tipo_sot,
+        "clasificacion": {
 
-        "tecnologia": tecnologia,
+            "tipo_sot": tipo_sot,
 
-        "aplicativos": aplicativos,
+            "tecnologia": tecnologia,
 
-        "intenciones": intenciones,
+            "aplicativos": aplicativos
+        },
 
-        "palabras_clave": palabras_clave,
+        "busqueda": {
 
-        "respuesta_corta":
-            respuesta_corta,
+            "consultas_ejemplo": (
+                consultas
+            ),
 
-        "pasos": [],
+            "palabras_clave": (
+                palabras
+            ),
 
-        "precondiciones":
-            precondiciones,
+            "sinonimos": (
+                sinonimos
+            )
+        },
 
-        "evidencias":
-            evidencias,
+        "respuesta": {
 
-        "accion_si_falla":
-            accion_si_falla,
+            "resumen": resumen,
 
-        "advertencias":
-            advertencias,
+            "pasos": pasos,
 
-        "fuente_interna":
-            fuente,
+            "precondiciones": (
+                precondiciones
+            ),
 
-        "activo": True
+            "verificaciones": (
+                verificaciones
+            ),
+
+            "advertencias": (
+                advertencias
+            ),
+
+            "accion_si_no_cumple": (
+                accion_no_cumple
+            ),
+
+            "escalamiento": (
+                escalamiento
+            )
+        },
+
+        "fuente": {
+
+            "tipo": (
+                "Capacitación interna"
+            ),
+
+            "referencia": referencia
+        },
+
+        "control": {
+
+            "activo": True,
+
+            "validado": False,
+
+            "fecha_creacion": fecha,
+
+            "fecha_actualizacion": fecha
+        }
     }
-
-    print("\n")
-
-    errores = validar_procedimiento(
-        procedimiento
-    )
-
-    if errores:
-
-        print(
-            "ADVERTENCIAS DE VALIDACIÓN:"
-        )
-
-        for error in errores:
-
-            print(
-                f"- {error}"
-            )
-
-        continuar = pedir_si_no(
-            "\n¿Deseas guardar de todas formas?"
-        )
-
-        if not continuar:
-            print(
-                "Operación cancelada."
-            )
-            return
-
-    if pedir_si_no(
-        "\n¿Deseas agregar pasos ahora?"
-    ):
-
-        agregar_pasos_a_objeto(
-            procedimiento
-        )
-
-    print("\nRESUMEN DEL PROCEDIMIENTO")
 
     mostrar_procedimiento(
         procedimiento
@@ -703,326 +1043,382 @@ def agregar_procedimiento(base):
         "\n¿Guardar procedimiento?"
     ):
 
-        base["procedimientos"].append(
+        base[
+            "procedimientos"
+        ].append(
             procedimiento
         )
 
-        guardar_base(base)
-
-        print(
-            f"\nProcedimiento "
-            f"{identificador} creado."
+        guardar_base(
+            base
         )
-
-    else:
-
-        print(
-            "\nOperación cancelada."
-        )
-
-
-# ==========================================================
-# AGREGAR PASOS
-# ==========================================================
-
-def agregar_pasos_a_objeto(
-    procedimiento
-):
-
-    print("\n")
-    print(
-        "AGREGAR PASOS"
-    )
-
-    while True:
-
-        orden = (
-            len(
-                procedimiento.get(
-                    "pasos",
-                    []
-                )
-            )
-            + 1
-        )
-
-        aplicativo = input(
-            f"\nPaso {orden} - Aplicativo: "
-        ).strip()
-
-        accion = input(
-            f"Paso {orden} - Acción: "
-        ).strip()
-
-        if not accion:
-
-            print(
-                "La acción no puede estar vacía."
-            )
-
-            continue
-
-        nuevo_paso = {
-
-            "orden": orden,
-
-            "aplicativo":
-                aplicativo,
-
-            "accion":
-                accion
-        }
-
-        procedimiento.setdefault(
-            "pasos",
-            []
-        ).append(
-            nuevo_paso
-        )
-
-        if not pedir_si_no(
-            "\n¿Agregar otro paso?"
-        ):
-            break
-
-
-def agregar_pasos_procedimiento(base):
-
-    id_busqueda = input(
-        "\nID del procedimiento: "
-    ).strip()
-
-    procedimiento = obtener_procedimiento(
-        base,
-        id_busqueda
-    )
-
-    if not procedimiento:
-
-        print(
-            "\nProcedimiento no encontrado."
-        )
-
-        return
-
-    mostrar_procedimiento(
-        procedimiento
-    )
-
-    agregar_pasos_a_objeto(
-        procedimiento
-    )
-
-    guardar_base(base)
 
 
 # ==========================================================
 # EDITAR PROCEDIMIENTO
 # ==========================================================
 
-def editar_procedimiento(base):
+def editar_procedimiento(
+    base
+):
 
-    id_busqueda = input(
-        "\nID del procedimiento a editar: "
+    identificador = input(
+        "\nID del procedimiento: "
     ).strip()
 
-    procedimiento = obtener_procedimiento(
-        base,
-        id_busqueda
+    procedimiento = (
+        obtener_procedimiento(
+            base,
+            identificador
+        )
     )
 
     if not procedimiento:
 
         print(
-            "\nProcedimiento no encontrado."
+            "Procedimiento "
+            "no encontrado."
         )
 
         return
 
-    mostrar_procedimiento(
-        procedimiento
-    )
-
     while True:
 
-        print("\n")
-        print("¿QUÉ DESEAS EDITAR?")
-        print("1. Título")
-        print("2. Dominio")
-        print("3. Tipos de SOT")
-        print("4. Tecnología")
-        print("5. Aplicativos")
-        print("6. Palabras clave")
-        print("7. Ejemplos de preguntas")
-        print("8. Respuesta corta")
-        print("9. Precondiciones")
-        print("10. Evidencias")
-        print("11. Acción si falla")
-        print("12. Advertencias")
-        print("13. Fuente interna")
-        print("14. Terminar edición")
+        mostrar_procedimiento(
+            procedimiento
+        )
+
+        print()
+        print(
+            "1. Título"
+        )
+        print(
+            "2. Dominio"
+        )
+        print(
+            "3. Tipo de SOT"
+        )
+        print(
+            "4. Tecnología"
+        )
+        print(
+            "5. Aplicativos"
+        )
+        print(
+            "6. Consultas ejemplo"
+        )
+        print(
+            "7. Palabras clave"
+        )
+        print(
+            "8. Sinónimos"
+        )
+        print(
+            "9. Respuesta resumida"
+        )
+        print(
+            "10. Precondiciones"
+        )
+        print(
+            "11. Verificaciones"
+        )
+        print(
+            "12. Advertencias"
+        )
+        print(
+            "13. Acción si no cumple"
+        )
+        print(
+            "14. Escalamiento"
+        )
+        print(
+            "15. Referencia"
+        )
+        print(
+            "16. Reemplazar pasos"
+        )
+        print(
+            "17. Finalizar"
+        )
 
         opcion = input(
-            "\nSeleccione opción: "
+            "\nOpción: "
         ).strip()
+
+        clasificacion = (
+            procedimiento[
+                "clasificacion"
+            ]
+        )
+
+        busqueda = (
+            procedimiento[
+                "busqueda"
+            ]
+        )
+
+        respuesta = (
+            procedimiento[
+                "respuesta"
+            ]
+        )
 
         if opcion == "1":
 
-            procedimiento["titulo"] = (
-                input(
-                    "Nuevo título: "
-                ).strip()
-            )
+            procedimiento[
+                "titulo"
+            ] = input(
+                "Nuevo título: "
+            ).strip()
 
         elif opcion == "2":
 
-            procedimiento["dominio"] = (
-                input(
-                    "Nuevo dominio: "
-                ).strip()
-            )
+            procedimiento[
+                "dominio"
+            ] = input(
+                "Nuevo dominio: "
+            ).strip()
 
         elif opcion == "3":
 
-            procedimiento["tipo_sot"] = (
-                pedir_lista(
-                    "Tipos separados por coma: "
-                )
+            clasificacion[
+                "tipo_sot"
+            ] = pedir_lista(
+                "Tipos: "
             )
 
         elif opcion == "4":
 
-            procedimiento["tecnologia"] = (
-                pedir_lista(
-                    "Tecnologías separadas por coma: "
-                )
+            clasificacion[
+                "tecnologia"
+            ] = pedir_lista(
+                "Tecnologías: "
             )
 
         elif opcion == "5":
 
-            procedimiento["aplicativos"] = (
-                pedir_lista(
-                    "Aplicativos separados por coma: "
-                )
+            clasificacion[
+                "aplicativos"
+            ] = pedir_lista(
+                "Aplicativos: "
             )
 
         elif opcion == "6":
 
-            procedimiento[
-                "palabras_clave"
-            ] = pedir_lista(
-                "Palabras separadas por coma: "
-            )
-
-        elif opcion == "7":
-
-            procedimiento[
-                "intenciones"
+            busqueda[
+                "consultas_ejemplo"
             ] = pedir_lista(
                 "Preguntas separadas por |: ",
                 "|"
             )
 
+        elif opcion == "7":
+
+            busqueda[
+                "palabras_clave"
+            ] = pedir_lista(
+                "Palabras clave: "
+            )
+
         elif opcion == "8":
 
-            procedimiento[
-                "respuesta_corta"
-            ] = input(
-                "Nueva respuesta: "
-            ).strip()
+            busqueda[
+                "sinonimos"
+            ] = pedir_lista(
+                "Sinónimos: "
+            )
 
         elif opcion == "9":
 
-            procedimiento[
-                "precondiciones"
-            ] = pedir_lista(
-                "Precondiciones separadas por |: ",
-                "|"
-            )
+            respuesta[
+                "resumen"
+            ] = input(
+                "Respuesta: "
+            ).strip()
 
         elif opcion == "10":
 
-            procedimiento[
-                "evidencias"
+            respuesta[
+                "precondiciones"
             ] = pedir_lista(
-                "Evidencias separadas por |: ",
+                "Precondiciones: ",
                 "|"
             )
 
         elif opcion == "11":
 
-            procedimiento[
-                "accion_si_falla"
-            ] = input(
-                "Nueva acción si falla: "
-            ).strip()
+            respuesta[
+                "verificaciones"
+            ] = pedir_lista(
+                "Verificaciones: ",
+                "|"
+            )
 
         elif opcion == "12":
 
-            procedimiento[
+            respuesta[
                 "advertencias"
             ] = pedir_lista(
-                "Advertencias separadas por |: ",
+                "Advertencias: ",
                 "|"
             )
 
         elif opcion == "13":
 
-            procedimiento[
-                "fuente_interna"
+            respuesta[
+                "accion_si_no_cumple"
             ] = input(
-                "Fuente interna: "
+                "Acción: "
             ).strip()
 
         elif opcion == "14":
+
+            respuesta[
+                "escalamiento"
+            ] = input(
+                "Escalamiento: "
+            ).strip()
+
+        elif opcion == "15":
+
+            procedimiento[
+                "fuente"
+            ][
+                "referencia"
+            ] = input(
+                "Referencia: "
+            ).strip()
+
+        elif opcion == "16":
+
+            respuesta[
+                "pasos"
+            ] = crear_pasos()
+
+        elif opcion == "17":
+
+            procedimiento[
+                "control"
+            ][
+                "fecha_actualizacion"
+            ] = fecha_actual()
+
+            guardar_base(
+                base
+            )
+
             break
 
         else:
 
             print(
-                "Opción no válida."
+                "Opción incorrecta."
             )
 
-    guardar_base(base)
-
 
 # ==========================================================
-# ACTIVAR / DESACTIVAR
+# CAMBIAR ESTADO
 # ==========================================================
 
-def cambiar_estado_procedimiento(base):
+def cambiar_activo(
+    base
+):
 
-    id_busqueda = input(
-        "\nID del procedimiento: "
+    identificador = input(
+        "\nID: "
     ).strip()
 
-    procedimiento = obtener_procedimiento(
-        base,
-        id_busqueda
+    procedimiento = (
+        obtener_procedimiento(
+            base,
+            identificador
+        )
     )
 
     if not procedimiento:
 
         print(
-            "Procedimiento no encontrado."
+            "No encontrado."
         )
 
         return
 
-    estado_actual = procedimiento.get(
+    control = procedimiento[
+        "control"
+    ]
+
+    control[
+        "activo"
+    ] = not control.get(
         "activo",
         True
     )
 
-    procedimiento["activo"] = (
-        not estado_actual
+    control[
+        "fecha_actualizacion"
+    ] = fecha_actual()
+
+    guardar_base(
+        base
     )
 
-    guardar_base(base)
+    print(
+        "\nEstado:",
+        "ACTIVO"
+        if control["activo"]
+        else "INACTIVO"
+    )
+
+
+def cambiar_validado(
+    base
+):
+
+    identificador = input(
+        "\nID: "
+    ).strip()
+
+    procedimiento = (
+        obtener_procedimiento(
+            base,
+            identificador
+        )
+    )
+
+    if not procedimiento:
+
+        print(
+            "No encontrado."
+        )
+
+        return
+
+    control = procedimiento[
+        "control"
+    ]
+
+    control[
+        "validado"
+    ] = not control.get(
+        "validado",
+        False
+    )
+
+    control[
+        "fecha_actualizacion"
+    ] = fecha_actual()
+
+    guardar_base(
+        base
+    )
 
     print(
-        f"\nNuevo estado: "
-        f"{'ACTIVO' if procedimiento['activo'] else 'INACTIVO'}"
+        "\nValidación:",
+        "VALIDADO"
+        if control[
+            "validado"
+        ]
+        else "PENDIENTE"
     )
 
 
@@ -1030,32 +1426,42 @@ def cambiar_estado_procedimiento(base):
 # CÓDIGOS DE MANTENIMIENTO
 # ==========================================================
 
-def listar_codigos(base):
+def listar_codigos(
+    base
+):
 
     codigos = base.get(
         "codigos_mantenimiento",
         []
     )
 
+    print()
+    print(
+        "CÓDIGOS DE MANTENIMIENTO"
+    )
+
     if not codigos:
 
         print(
-            "\nNo hay códigos registrados."
+            "\nNo hay códigos "
+            "registrados."
         )
 
         return
 
-    print("\nCÓDIGOS DE MANTENIMIENTO\n")
-
-    for registro in codigos:
+    for codigo in codigos:
 
         print(
-            f"{registro['codigo']} - "
-            f"{registro['significado']}"
+            f"\n{codigo.get('codigo')} "
+            f"- "
+            f"{codigo.get('significado')}"
         )
 
 
-def codigo_existe(base, codigo):
+def codigo_existe(
+    base,
+    codigo
+):
 
     for registro in base.get(
         "codigos_mantenimiento",
@@ -1070,26 +1476,24 @@ def codigo_existe(base, codigo):
             ==
             codigo.upper()
         ):
+
             return True
 
     return False
 
 
-def agregar_codigo(base):
-
-    print("\n")
-    print("=" * 50)
-    print("NUEVO CÓDIGO DE MANTENIMIENTO")
-    print("=" * 50)
+def agregar_codigo(
+    base
+):
 
     codigo = input(
-        "Código: "
+        "\nCódigo: "
     ).strip().upper()
 
     if not codigo:
 
         print(
-            "El código es obligatorio."
+            "Código obligatorio."
         )
 
         return
@@ -1100,7 +1504,7 @@ def agregar_codigo(base):
     ):
 
         print(
-            "\nERROR: Ese código ya existe."
+            "Ese código ya existe."
         )
 
         return
@@ -1127,30 +1531,32 @@ def agregar_codigo(base):
 
     registro = {
 
-        "codigo":
-            codigo,
+        "codigo": codigo,
 
-        "significado":
-            significado,
+        "significado": significado,
 
-        "tipo_mantenimiento":
-            tipo,
+        "tipo_mantenimiento": tipo,
 
-        "aplicacion_o_caso":
-            caso,
+        "aplicacion_o_caso": caso,
 
-        "accion_asesor":
-            accion,
+        "accion_asesor": accion,
 
-        "observaciones":
-            observaciones,
+        "observaciones": observaciones,
 
-        "activo":
-            True
+        "control": {
+
+            "activo": True,
+
+            "validado": False,
+
+            "fecha_actualizacion": (
+                fecha_actual()
+            )
+        }
     }
 
     if pedir_si_no(
-        "\n¿Guardar código?"
+        "¿Guardar código?"
     ):
 
         base.setdefault(
@@ -1160,93 +1566,8 @@ def agregar_codigo(base):
             registro
         )
 
-        guardar_base(base)
-
-        print(
-            f"\nCódigo {codigo} agregado."
-        )
-
-
-# ==========================================================
-# ESTADÍSTICAS
-# ==========================================================
-
-def mostrar_estadisticas(base):
-
-    procedimientos = base.get(
-        "procedimientos",
-        []
-    )
-
-    activos = sum(
-        1
-        for p in procedimientos
-        if p.get(
-            "activo",
-            True
-        )
-    )
-
-    inactivos = (
-        len(procedimientos)
-        - activos
-    )
-
-    codigos = len(
-        base.get(
-            "codigos_mantenimiento",
-            []
-        )
-    )
-
-    dominios = {}
-
-    for procedimiento in procedimientos:
-
-        dominio = procedimiento.get(
-            "dominio",
-            "sin dominio"
-        )
-
-        dominios[dominio] = (
-            dominios.get(
-                dominio,
-                0
-            )
-            + 1
-        )
-
-    print("\n")
-    print("=" * 50)
-    print("ESTADÍSTICAS DE LA BASE")
-    print("=" * 50)
-
-    print(
-        f"Procedimientos totales: "
-        f"{len(procedimientos)}"
-    )
-
-    print(
-        f"Activos: {activos}"
-    )
-
-    print(
-        f"Inactivos: {inactivos}"
-    )
-
-    print(
-        f"Códigos de mantenimiento: "
-        f"{codigos}"
-    )
-
-    print(
-        "\nProcedimientos por dominio:"
-    )
-
-    for dominio, cantidad in dominios.items():
-
-        print(
-            f"- {dominio}: {cantidad}"
+        guardar_base(
+            base
         )
 
 
@@ -1259,14 +1580,16 @@ def menu():
     base = cargar_base()
 
     if base is None:
+
         return
 
     while True:
 
-        print("\n")
+        print()
         print("=" * 60)
         print(
-            "GESTIÓN DE BASE DE CONOCIMIENTO"
+            "GESTOR DE BASE "
+            "DE CONOCIMIENTO"
         )
         print("=" * 60)
 
@@ -1279,7 +1602,7 @@ def menu():
         )
 
         print(
-            "3. Ver procedimiento completo"
+            "3. Ver procedimiento"
         )
 
         print(
@@ -1291,31 +1614,29 @@ def menu():
         )
 
         print(
-            "6. Agregar pasos a procedimiento"
+            "6. Activar / desactivar"
         )
 
         print(
-            "7. Activar / desactivar procedimiento"
+            "7. Marcar validado / pendiente"
         )
 
         print(
-            "8. Listar códigos de mantenimiento"
+            "8. Listar códigos "
+            "de mantenimiento"
         )
 
         print(
-            "9. Agregar código de mantenimiento"
+            "9. Agregar código "
+            "de mantenimiento"
         )
 
         print(
-            "10. Ver estadísticas"
-        )
-
-        print(
-            "11. Salir"
+            "10. Salir"
         )
 
         opcion = input(
-            "\nSeleccione una opción: "
+            "\nSeleccione opción: "
         ).strip()
 
         if opcion == "1":
@@ -1336,14 +1657,14 @@ def menu():
 
         elif opcion == "3":
 
-            id_busqueda = input(
-                "\nIngrese ID: "
+            identificador = input(
+                "\nID: "
             ).strip()
 
             procedimiento = (
                 obtener_procedimiento(
                     base,
-                    id_busqueda
+                    identificador
                 )
             )
 
@@ -1356,7 +1677,7 @@ def menu():
             else:
 
                 print(
-                    "Procedimiento no encontrado."
+                    "No encontrado."
                 )
 
             pausar()
@@ -1383,7 +1704,7 @@ def menu():
 
         elif opcion == "6":
 
-            agregar_pasos_procedimiento(
+            cambiar_activo(
                 base
             )
 
@@ -1393,7 +1714,7 @@ def menu():
 
         elif opcion == "7":
 
-            cambiar_estado_procedimiento(
+            cambiar_validado(
                 base
             )
 
@@ -1421,14 +1742,6 @@ def menu():
 
         elif opcion == "10":
 
-            mostrar_estadisticas(
-                base
-            )
-
-            pausar()
-
-        elif opcion == "11":
-
             print(
                 "\nPrograma finalizado."
             )
@@ -1438,7 +1751,7 @@ def menu():
         else:
 
             print(
-                "\nOpción no válida."
+                "\nOpción incorrecta."
             )
 
 
@@ -1447,4 +1760,5 @@ def menu():
 # ==========================================================
 
 if __name__ == "__main__":
+
     menu()
