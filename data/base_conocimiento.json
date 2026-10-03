@@ -516,6 +516,49 @@
             "advertencias": [],
             "fuente_interna": "Capacitación operativa",
             "activo": true
+        },
+        {
+            "id": "VAL005",
+            "dominio": "validacion",
+            "titulo": "Procedimiento de prueba",
+            "tipo_sot": [
+                "mantenimiento"
+            ],
+            "tecnologia": [
+                "HFC"
+            ],
+            "aplicativos": [
+                "SGA",
+                "Incognito"
+            ],
+            "intenciones": [
+                "como hago una prueba",
+                "como valido la prueba"
+            ],
+            "palabras_clave": [
+                "prueba",
+                "validacion",
+                "mantenimiento"
+            ],
+            "respuesta_corta": "Este es un procedimiento temporal de prueba.",
+            "pasos": [
+                {
+                    "orden": 1,
+                    "aplicativo": "SGA",
+                    "accion": "Ingresar al sistema."
+                },
+                {
+                    "orden": 2,
+                    "aplicativo": "Incognito",
+                    "accion": "Validar la información."
+                }
+            ],
+            "precondiciones": [],
+            "evidencias": [],
+            "accion_si_falla": "",
+            "advertencias": [],
+            "fuente_interna": "",
+            "activo": true
         }
     ],
     "codigos_mantenimiento": [],
