@@ -1,18 +1,13 @@
 // ==========================================================
 // MOTOR DE BÚSQUEDA - ASISTENTE TÉCNICO
-// Versión web equivalente al motor_busqueda.py
 // ==========================================================
 
+const RUTA_BASE_CONOCIMIENTO =
+    "data/base_conocimiento.json";
 
-// ==========================================================
-// CONFIGURACIÓN
-// ==========================================================
-
-const RUTA_BASE_CONOCIMIENTO = "data/base_conocimiento.json";
-
-const UMBRAL_RESPUESTA = 10.0;
-const UMBRAL_ALTA = 20.0;
-const UMBRAL_MEDIA = 14.0;
+const UMBRAL_RESPUESTA = 10;
+const UMBRAL_ALTA = 20;
+const UMBRAL_MEDIA = 14;
 const MAX_RESULTADOS = 5;
 
 
@@ -60,15 +55,11 @@ const STOPWORDS = new Set([
 ]);
 
 
-// ==========================================================
-// VARIABLES GLOBALES
-// ==========================================================
-
 let BASE_CONOCIMIENTO = null;
 
 
 // ==========================================================
-// CARGAR BASE DE CONOCIMIENTO
+// CARGAR BASE
 // ==========================================================
 
 async function cargarBaseConocimiento() {
@@ -85,25 +76,30 @@ async function cargarBaseConocimiento() {
         if (!respuesta.ok) {
 
             throw new Error(
-                `No se pudo cargar la base de conocimiento. ` +
-                `Código HTTP: ${respuesta.status}`
+                "No se pudo cargar base_conocimiento.json"
             );
         }
 
-        BASE_CONOCIMIENTO = await respuesta.json();
+        BASE_CONOCIMIENTO =
+            await respuesta.json();
 
         console.log(
-            "Base de conocimiento cargada correctamente."
+            "Base cargada:",
+            BASE_CONOCIMIENTO.metadata
         );
 
         console.log(
             "Procedimientos:",
-            BASE_CONOCIMIENTO.procedimientos?.length || 0
+            BASE_CONOCIMIENTO
+                .procedimientos
+                ?.length || 0
         );
 
         console.log(
-            "Códigos de mantenimiento:",
-            BASE_CONOCIMIENTO.codigos_mantenimiento?.length || 0
+            "Códigos:",
+            BASE_CONOCIMIENTO
+                .codigos_mantenimiento
+                ?.length || 0
         );
 
         return BASE_CONOCIMIENTO;
@@ -111,7 +107,7 @@ async function cargarBaseConocimiento() {
     } catch (error) {
 
         console.error(
-            "Error cargando base_conocimiento.json:",
+            "Error cargando la base:",
             error
         );
 
@@ -123,7 +119,7 @@ async function cargarBaseConocimiento() {
 
 
 // ==========================================================
-// NORMALIZACIÓN DE TEXTO
+// NORMALIZAR
 // ==========================================================
 
 function normalizarTexto(texto) {
@@ -160,171 +156,109 @@ function normalizarTexto(texto) {
 
 function tokenizar(texto) {
 
-    const textoNormalizado = normalizarTexto(
-        texto
-    );
+    const normalizado =
+        normalizarTexto(texto);
 
-    if (!textoNormalizado) {
+    if (!normalizado) {
         return [];
     }
 
-    return textoNormalizado
+    return normalizado
         .split(" ")
         .filter(
             palabra =>
                 palabra.length >= 3 &&
-                !STOPWORDS.has(palabra)
+                !STOPWORDS.has(
+                    palabra
+                )
         );
 }
 
 
 // ==========================================================
-// EXTRAER CÓDIGOS
+// COMPARAR CONJUNTOS DE TOKENS
 // ==========================================================
 
-function extraerCodigos(texto) {
-
-    const coincidencias = String(
-        texto || ""
-    ).match(
-        /\b[A-Za-z]{2}\d{2}\b/g
-    );
-
-    if (!coincidencias) {
-        return [];
-    }
-
-    return coincidencias.map(
-        codigo => codigo.toUpperCase()
-    );
-}
-
-
-// ==========================================================
-// BUSCAR CÓDIGO DE MANTENIMIENTO
-// ==========================================================
-
-function buscarCodigoMantenimiento(
-    pregunta,
-    base
+function mismosTokens(
+    textoA,
+    textoB
 ) {
 
-    const codigosPregunta = extraerCodigos(
-        pregunta
-    );
+    const tokensA =
+        [...new Set(
+            tokenizar(textoA)
+        )].sort();
+
+    const tokensB =
+        [...new Set(
+            tokenizar(textoB)
+        )].sort();
 
     if (
-        codigosPregunta.length === 0
+        tokensA.length === 0 ||
+        tokensB.length === 0
     ) {
-
-        return null;
+        return false;
     }
 
-    const catalogo = new Map();
-
-    const codigosBase =
-        base.codigos_mantenimiento || [];
-
-    for (
-        const registro
-        of codigosBase
+    if (
+        tokensA.length !==
+        tokensB.length
     ) {
-
-        const control =
-            registro.control || {};
-
-        if (
-            control.activo === false
-        ) {
-            continue;
-        }
-
-        const codigo = String(
-            registro.codigo || ""
-        )
-            .trim()
-            .toUpperCase();
-
-        if (codigo) {
-
-            catalogo.set(
-                codigo,
-                registro
-            );
-        }
+        return false;
     }
 
-    for (
-        const codigo
-        of codigosPregunta
-    ) {
-
-        if (
-            catalogo.has(codigo)
-        ) {
-
-            return catalogo.get(
-                codigo
-            );
-        }
-    }
-
-    return null;
+    return tokensA.every(
+        (
+            token,
+            indice
+        ) =>
+            token ===
+            tokensB[indice]
+    );
 }
 
 
 // ==========================================================
-// CONSTRUIR RESPUESTA DE CÓDIGO
+// TOKENS COMUNES
 // ==========================================================
 
-function construirRespuestaCodigo(
-    registro
+function contarTokensComunes(
+    textoA,
+    textoB
 ) {
 
-    const codigo =
-        registro.codigo || "";
-
-    const categoria =
-        registro.categoria || "";
-
-    const significado =
-        registro.significado || "";
-
-    const detalleAdicional =
-        registro.detalle_adicional || "";
-
-    const registroSGA =
-        registro.registro_sga || "";
-
-    const lineas = [
-        "CÓDIGO DE MANTENIMIENTO",
-        "",
-        `Código: ${codigo}`,
-        `Categoría: ${categoria}`,
-        `Significado: ${significado}`
-    ];
-
-    if (detalleAdicional) {
-
-        lineas.push(
-            `Detalle adicional: ${detalleAdicional}`
+    const tokensA =
+        new Set(
+            tokenizar(textoA)
         );
+
+    const tokensB =
+        new Set(
+            tokenizar(textoB)
+        );
+
+    let cantidad = 0;
+
+    for (
+        const token
+        of tokensA
+    ) {
+
+        if (
+            tokensB.has(token)
+        ) {
+
+            cantidad++;
+        }
     }
 
-    if (registroSGA) {
-
-        lineas.push("");
-        lineas.push(
-            `Registro SGA: ${registroSGA}`
-        );
-    }
-
-    return lineas.join("\n");
+    return cantidad;
 }
 
 
 // ==========================================================
-// SIMILITUD DE TEXTO
+// SIMILITUD LEVENSHTEIN
 // ==========================================================
 
 function similitudTexto(
@@ -332,13 +266,15 @@ function similitudTexto(
     textoB
 ) {
 
-    const a = normalizarTexto(
-        textoA
-    );
+    const a =
+        normalizarTexto(
+            textoA
+        );
 
-    const b = normalizarTexto(
-        textoB
-    );
+    const b =
+        normalizarTexto(
+            textoB
+        );
 
     if (
         !a ||
@@ -384,8 +320,8 @@ function similitudTexto(
         ) {
 
             if (
-                b.charAt(i - 1) ===
-                a.charAt(j - 1)
+                b[i - 1] ===
+                a[j - 1]
             ) {
 
                 matriz[i][j] =
@@ -404,30 +340,160 @@ function similitudTexto(
     }
 
     const distancia =
-        matriz[b.length][a.length];
+        matriz[
+            b.length
+        ][
+            a.length
+        ];
 
-    const longitudMaxima =
+    const longitud =
         Math.max(
             a.length,
             b.length
         );
 
-    if (
-        longitudMaxima === 0
-    ) {
-        return 1;
-    }
-
     return (
         1 -
         distancia /
-        longitudMaxima
+        longitud
     );
 }
 
 
 // ==========================================================
-// OBTENER TEXTOS DEL PROCEDIMIENTO
+// EXTRAER CÓDIGOS
+// ==========================================================
+
+function extraerCodigos(texto) {
+
+    const coincidencias =
+        String(
+            texto || ""
+        ).match(
+            /\b[A-Za-z]{2}\d{2}\b/g
+        );
+
+    if (!coincidencias) {
+        return [];
+    }
+
+    return coincidencias.map(
+        codigo =>
+            codigo.toUpperCase()
+    );
+}
+
+
+// ==========================================================
+// BUSCAR CÓDIGO
+// ==========================================================
+
+function buscarCodigoMantenimiento(
+    pregunta,
+    base
+) {
+
+    const codigos =
+        extraerCodigos(
+            pregunta
+        );
+
+    if (
+        codigos.length === 0
+    ) {
+
+        return null;
+    }
+
+    const catalogo =
+        base.codigos_mantenimiento ||
+        [];
+
+    for (
+        const codigoPregunta
+        of codigos
+    ) {
+
+        for (
+            const registro
+            of catalogo
+        ) {
+
+            if (
+                registro
+                    .control
+                    ?.activo
+                === false
+            ) {
+
+                continue;
+            }
+
+            const codigoBase =
+                String(
+                    registro.codigo ||
+                    ""
+                )
+                    .trim()
+                    .toUpperCase();
+
+            if (
+                codigoBase ===
+                codigoPregunta
+            ) {
+
+                return registro;
+            }
+        }
+    }
+
+    return null;
+}
+
+
+// ==========================================================
+// RESPUESTA CÓDIGO
+// ==========================================================
+
+function construirRespuestaCodigo(
+    registro
+) {
+
+    const lineas = [
+        "CÓDIGO DE MANTENIMIENTO",
+        "",
+        `Código: ${registro.codigo || ""}`,
+        `Categoría: ${registro.categoria || ""}`,
+        `Significado: ${registro.significado || ""}`
+    ];
+
+    if (
+        registro.detalle_adicional
+    ) {
+
+        lineas.push(
+            `Detalle adicional: ${registro.detalle_adicional}`
+        );
+    }
+
+    if (
+        registro.registro_sga
+    ) {
+
+        lineas.push("");
+        lineas.push(
+            `Registro SGA: ${registro.registro_sga}`
+        );
+    }
+
+    return lineas.join(
+        "\n"
+    );
+}
+
+
+// ==========================================================
+// TEXTOS DEL PROCEDIMIENTO
 // ==========================================================
 
 function obtenerTextosBusqueda(
@@ -437,34 +503,28 @@ function obtenerTextosBusqueda(
     const textos = [];
 
     textos.push({
-        campo: "titulo",
-        texto:
-            procedimiento.titulo || "",
-        peso: 8.0
-    });
+        campo:
+            "titulo",
 
-    textos.push({
-        campo: "dominio",
         texto:
-            procedimiento.dominio || "",
-        peso: 2.0
+            procedimiento
+                .titulo || "",
+
+        peso:
+            9
     });
 
     const busqueda =
-        procedimiento.busqueda || {};
-
-    const consultasEjemplo =
-        busqueda.consultas_ejemplo || [];
-
-    const palabrasClave =
-        busqueda.palabras_clave || [];
-
-    const sinonimos =
-        busqueda.sinonimos || [];
+        procedimiento.busqueda ||
+        {};
 
     for (
         const consulta
-        of consultasEjemplo
+        of (
+            busqueda
+                .consultas_ejemplo ||
+            []
+        )
     ) {
 
         textos.push({
@@ -475,13 +535,17 @@ function obtenerTextosBusqueda(
                 consulta,
 
             peso:
-                7.0
+                12
         });
     }
 
     for (
         const palabra
-        of palabrasClave
+        of (
+            busqueda
+                .palabras_clave ||
+            []
+        )
     ) {
 
         textos.push({
@@ -492,13 +556,16 @@ function obtenerTextosBusqueda(
                 palabra,
 
             peso:
-                5.0
+                3
         });
     }
 
     for (
         const sinonimo
-        of sinonimos
+        of (
+            busqueda.sinonimos ||
+            []
+        )
     ) {
 
         textos.push({
@@ -509,25 +576,22 @@ function obtenerTextosBusqueda(
                 sinonimo,
 
             peso:
-                5.0
+                5
         });
     }
 
     const clasificacion =
-        procedimiento.clasificacion || {};
-
-    const tiposSot =
-        clasificacion.tipo_sot || [];
-
-    const tecnologias =
-        clasificacion.tecnologia || [];
-
-    const aplicativos =
-        clasificacion.aplicativos || [];
+        procedimiento
+            .clasificacion ||
+        {};
 
     for (
         const tipo
-        of tiposSot
+        of (
+            clasificacion
+                .tipo_sot ||
+            []
+        )
     ) {
 
         textos.push({
@@ -538,13 +602,17 @@ function obtenerTextosBusqueda(
                 tipo,
 
             peso:
-                3.0
+                2
         });
     }
 
     for (
         const tecnologia
-        of tecnologias
+        of (
+            clasificacion
+                .tecnologia ||
+            []
+        )
     ) {
 
         textos.push({
@@ -555,13 +623,17 @@ function obtenerTextosBusqueda(
                 tecnologia,
 
             peso:
-                3.0
+                3
         });
     }
 
     for (
         const aplicativo
-        of aplicativos
+        of (
+            clasificacion
+                .aplicativos ||
+            []
+        )
     ) {
 
         textos.push({
@@ -572,7 +644,7 @@ function obtenerTextosBusqueda(
                 aplicativo,
 
             peso:
-                3.0
+                2
         });
     }
 
@@ -581,41 +653,7 @@ function obtenerTextosBusqueda(
 
 
 // ==========================================================
-// INTERSECCIÓN DE TOKENS
-// ==========================================================
-
-function contarTokensComunes(
-    tokensPregunta,
-    tokensTexto
-) {
-
-    const conjuntoPregunta =
-        new Set(tokensPregunta);
-
-    const conjuntoTexto =
-        new Set(tokensTexto);
-
-    let cantidad = 0;
-
-    for (
-        const token
-        of conjuntoPregunta
-    ) {
-
-        if (
-            conjuntoTexto.has(token)
-        ) {
-
-            cantidad++;
-        }
-    }
-
-    return cantidad;
-}
-
-
-// ==========================================================
-// EVIDENCIA LÉXICA
+// VALIDAR EVIDENCIA
 // ==========================================================
 
 function evaluarEvidenciaLexica(
@@ -624,57 +662,33 @@ function evaluarEvidenciaLexica(
 ) {
 
     const tokensPregunta =
-        tokenizar(pregunta);
+        tokenizar(
+            pregunta
+        );
 
     if (
         tokensPregunta.length < 2
     ) {
 
-        return {
-            valida: false,
-            maxComunes: 0,
-            fraseFuerte: false
-        };
+        return false;
     }
-
-    let maxComunes = 0;
-    let fraseFuerte = false;
-
-    const preguntaNormalizada =
-        normalizarTexto(
-            pregunta
-        );
 
     const textos =
         obtenerTextosBusqueda(
             procedimiento
         );
 
+    let maxComunes = 0;
+
     for (
         const item
         of textos
     ) {
 
-        const textoNormalizado =
-            normalizarTexto(
-                item.texto
-            );
-
-        if (
-            !textoNormalizado
-        ) {
-            continue;
-        }
-
-        const tokensTexto =
-            tokenizar(
-                item.texto
-            );
-
         const comunes =
             contarTokensComunes(
-                tokensPregunta,
-                tokensTexto
+                pregunta,
+                item.texto
             );
 
         maxComunes =
@@ -683,44 +697,31 @@ function evaluarEvidenciaLexica(
                 comunes
             );
 
-        const camposFuertes =
-            [
-                "titulo",
-                "consulta_ejemplo",
-                "palabra_clave",
-                "sinonimo"
-            ];
-
         if (
-            textoNormalizado.length >= 5 &&
             (
-                preguntaNormalizada.includes(
-                    textoNormalizado
-                ) ||
-                textoNormalizado.includes(
-                    preguntaNormalizada
-                )
-            ) &&
-            camposFuertes.includes(
-                item.campo
+                item.campo ===
+                "consulta_ejemplo"
+                ||
+                item.campo ===
+                "titulo"
+                ||
+                item.campo ===
+                "sinonimo"
+            )
+            &&
+            mismosTokens(
+                pregunta,
+                item.texto
             )
         ) {
 
-            fraseFuerte = true;
+            return true;
         }
     }
 
-    return {
-        valida:
-            fraseFuerte ||
-            maxComunes >= 2,
-
-        maxComunes:
-            maxComunes,
-
-        fraseFuerte:
-            fraseFuerte
-    };
+    return (
+        maxComunes >= 2
+    );
 }
 
 
@@ -733,14 +734,11 @@ function puntuarProcedimiento(
     procedimiento
 ) {
 
-    const evidencia =
-        evaluarEvidenciaLexica(
+    if (
+        !evaluarEvidenciaLexica(
             pregunta,
             procedimiento
-        );
-
-    if (
-        !evidencia.valida
+        )
     ) {
 
         return {
@@ -749,7 +747,7 @@ function puntuarProcedimiento(
         };
     }
 
-    const preguntaNormalizada =
+    const preguntaN =
         normalizarTexto(
             pregunta
         );
@@ -773,14 +771,12 @@ function puntuarProcedimiento(
         of textos
     ) {
 
-        const textoNormalizado =
+        const textoN =
             normalizarTexto(
                 item.texto
             );
 
-        if (
-            !textoNormalizado
-        ) {
+        if (!textoN) {
             continue;
         }
 
@@ -789,70 +785,107 @@ function puntuarProcedimiento(
                 item.texto
             );
 
-        const cantidadComunes =
+        const comunes =
             contarTokensComunes(
-                tokensPregunta,
-                tokensTexto
+                pregunta,
+                item.texto
             );
 
         let puntos = 0;
 
-        // --------------------------------------------------
+
+        // ==================================================
+        // CONSULTA EJEMPLO CASI EXACTA
+        // ==================================================
+
+        if (
+            item.campo ===
+            "consulta_ejemplo"
+            &&
+            mismosTokens(
+                pregunta,
+                item.texto
+            )
+        ) {
+
+            puntos += 25;
+        }
+
+
+        // ==================================================
+        // TÍTULO CASI EXACTO
+        // ==================================================
+
+        else if (
+            item.campo ===
+            "titulo"
+            &&
+            mismosTokens(
+                pregunta,
+                item.texto
+            )
+        ) {
+
+            puntos += 20;
+        }
+
+
+        // ==================================================
         // COINCIDENCIA EXACTA
-        // --------------------------------------------------
+        // ==================================================
 
-        if (
-            textoNormalizado ===
-            preguntaNormalizada
+        else if (
+            textoN ===
+            preguntaN
         ) {
 
             puntos +=
                 item.peso +
-                8.0;
+                10;
         }
 
-        // --------------------------------------------------
-        // TEXTO GUARDADO DENTRO DE LA PREGUNTA
-        // --------------------------------------------------
+
+        // ==================================================
+        // FRASES DE DOS O MÁS PALABRAS
+        // ==================================================
 
         else if (
-            textoNormalizado.length >= 5 &&
-            preguntaNormalizada.includes(
-                textoNormalizado
-            )
+            tokensTexto.length >= 2
         ) {
 
-            puntos +=
-                item.peso +
-                5.0;
+            if (
+                preguntaN.includes(
+                    textoN
+                )
+            ) {
+
+                puntos +=
+                    item.peso +
+                    4;
+
+            } else if (
+                textoN.includes(
+                    preguntaN
+                )
+            ) {
+
+                puntos +=
+                    item.peso *
+                    0.7;
+            }
         }
 
-        // --------------------------------------------------
-        // PREGUNTA DENTRO DEL TEXTO GUARDADO
-        // --------------------------------------------------
 
-        else if (
-            preguntaNormalizada.length >= 5 &&
-            textoNormalizado.includes(
-                preguntaNormalizada
-            )
-        ) {
-
-            puntos +=
-                item.peso *
-                0.8;
-        }
-
-        // --------------------------------------------------
-        // TOKENS EN COMÚN
-        // --------------------------------------------------
+        // ==================================================
+        // TOKENS COMUNES
+        // ==================================================
 
         if (
-            cantidadComunes > 0
+            comunes > 0
         ) {
 
             const cobertura =
-                cantidadComunes /
+                comunes /
                 Math.max(
                     tokensPregunta.length,
                     1
@@ -863,25 +896,26 @@ function puntuarProcedimiento(
                 item.peso;
 
             if (
-                cantidadComunes >= 2
+                comunes >= 2
             ) {
 
                 puntos +=
                     Math.min(
-                        3.0,
-                        cantidadComunes *
-                        0.8
+                        3,
+                        comunes * 0.7
                     );
             }
         }
 
-        // --------------------------------------------------
-        // SIMILITUD DIFUSA
-        // --------------------------------------------------
+
+        // ==================================================
+        // SIMILITUD
+        // Solo apoyo, nunca criterio principal
+        // ==================================================
 
         if (
-            cantidadComunes > 0 ||
-            evidencia.fraseFuerte
+            comunes >= 1 &&
+            tokensTexto.length >= 2
         ) {
 
             const similitud =
@@ -891,15 +925,16 @@ function puntuarProcedimiento(
                 );
 
             if (
-                similitud >= 0.55
+                similitud >= 0.60
             ) {
 
                 puntos +=
                     similitud *
                     item.peso *
-                    0.4;
+                    0.25;
             }
         }
+
 
         if (
             puntos > 0
@@ -916,27 +951,74 @@ function puntuarProcedimiento(
 
                 puntos:
                     Number(
-                        puntos.toFixed(2)
+                        puntos.toFixed(
+                            2
+                        )
                     )
             });
         }
     }
 
+
+    // ======================================================
+    // BONUS POR DOMINIO EXPLÍCITO
+    // ======================================================
+
+    const preguntaNormalizada =
+        normalizarTexto(
+            pregunta
+        );
+
+    const dominio =
+        normalizarTexto(
+            procedimiento
+                .dominio ||
+            ""
+        );
+
     if (
-        evidencia.maxComunes < 2 &&
-        !evidencia.fraseFuerte
+        dominio ===
+        "validacion"
+        &&
+        (
+            preguntaNormalizada
+                .includes(
+                    "valido"
+                )
+            ||
+            preguntaNormalizada
+                .includes(
+                    "validar"
+                )
+            ||
+            preguntaNormalizada
+                .includes(
+                    "validacion"
+                )
+        )
     ) {
 
-        return {
-            puntuacion: 0,
-            razones: []
-        };
+        puntuacion += 4;
+
+        razones.push({
+            campo:
+                "intencion_dominio",
+
+            valor:
+                "validacion",
+
+            puntos:
+                4
+        });
     }
+
 
     return {
         puntuacion:
             Number(
-                puntuacion.toFixed(2)
+                puntuacion.toFixed(
+                    2
+                )
             ),
 
         razones:
@@ -946,7 +1028,105 @@ function puntuarProcedimiento(
 
 
 // ==========================================================
-// CONSTRUIR RESPUESTA DEL PROCEDIMIENTO
+// BUSCAR PROCEDIMIENTOS
+// ==========================================================
+
+function buscarProcedimientos(
+    pregunta,
+    base
+) {
+
+    const resultados = [];
+
+    for (
+        const procedimiento
+        of (
+            base.procedimientos ||
+            []
+        )
+    ) {
+
+        if (
+            procedimiento
+                .control
+                ?.activo
+            === false
+        ) {
+
+            continue;
+        }
+
+        const evaluacion =
+            puntuarProcedimiento(
+                pregunta,
+                procedimiento
+            );
+
+        if (
+            evaluacion.puntuacion <
+            UMBRAL_RESPUESTA
+        ) {
+
+            continue;
+        }
+
+        let confianza =
+            "BAJA";
+
+        if (
+            evaluacion.puntuacion >=
+            UMBRAL_ALTA
+        ) {
+
+            confianza =
+                "ALTA";
+
+        } else if (
+            evaluacion.puntuacion >=
+            UMBRAL_MEDIA
+        ) {
+
+            confianza =
+                "MEDIA";
+        }
+
+        resultados.push({
+            procedimiento:
+                procedimiento,
+
+            puntuacion:
+                evaluacion
+                    .puntuacion,
+
+            confianza:
+                confianza,
+
+            razones:
+                evaluacion
+                    .razones
+        });
+    }
+
+
+    resultados.sort(
+        (
+            a,
+            b
+        ) =>
+            b.puntuacion -
+            a.puntuacion
+    );
+
+
+    return resultados.slice(
+        0,
+        MAX_RESULTADOS
+    );
+}
+
+
+// ==========================================================
+// CONSTRUIR RESPUESTA PROCEDIMIENTO
 // ==========================================================
 
 function construirRespuestaProcedimiento(
@@ -954,29 +1134,28 @@ function construirRespuestaProcedimiento(
 ) {
 
     const respuesta =
-        procedimiento.respuesta || {};
+        procedimiento.respuesta ||
+        {};
 
     const lineas = [
         `PROCEDIMIENTO: ${procedimiento.titulo || ""}`
     ];
 
-    const resumen =
-        respuesta.resumen || "";
 
-    if (resumen) {
+    if (
+        respuesta.resumen
+    ) {
 
         lineas.push("");
         lineas.push(
-            resumen
+            respuesta.resumen
         );
     }
 
-    // ------------------------------------------------------
-    // PASOS
-    // ------------------------------------------------------
 
     const pasos =
-        respuesta.pasos || [];
+        respuesta.pasos ||
+        [];
 
     if (
         pasos.length > 0
@@ -987,7 +1166,7 @@ function construirRespuestaProcedimiento(
             "PASOS:"
         );
 
-        const pasosOrdenados =
+        const ordenados =
             [...pasos].sort(
                 (
                     a,
@@ -1004,34 +1183,28 @@ function construirRespuestaProcedimiento(
 
         for (
             const paso
-            of pasosOrdenados
+            of ordenados
         ) {
 
-            const orden =
-                paso.orden || "";
-
-            const aplicativo =
-                paso.aplicativo || "";
-
-            const accion =
-                paso.accion || "";
-
-            let textoPaso =
-                `${orden}. `;
+            let texto =
+                `${paso.orden || ""}. `;
 
             if (
-                aplicativo
+                paso.aplicativo
             ) {
 
-                textoPaso +=
-                    `[${aplicativo}] `;
+                texto +=
+                    `[${paso.aplicativo}] `;
             }
 
-            textoPaso += accion;
+            texto +=
+                paso.accion ||
+                "";
 
             lineas.push(
-                textoPaso
+                texto
             );
+
 
             if (
                 paso.validacion
@@ -1041,6 +1214,7 @@ function construirRespuestaProcedimiento(
                     `   Verificar: ${paso.validacion}`
                 );
             }
+
 
             if (
                 paso.si_no_cumple
@@ -1053,96 +1227,60 @@ function construirRespuestaProcedimiento(
         }
     }
 
-    // ------------------------------------------------------
-    // PRECONDICIONES
-    // ------------------------------------------------------
 
-    const precondiciones =
-        respuesta.precondiciones || [];
+    const secciones = [
+        [
+            "PRECONDICIONES",
+            "precondiciones"
+        ],
+        [
+            "VERIFICAR",
+            "verificaciones"
+        ],
+        [
+            "ADVERTENCIAS",
+            "advertencias"
+        ]
+    ];
 
-    if (
-        precondiciones.length > 0
+
+    for (
+        const [
+            titulo,
+            campo
+        ]
+        of secciones
     ) {
 
-        lineas.push("");
-        lineas.push(
-            "PRECONDICIONES:"
-        );
+        const elementos =
+            respuesta[campo] ||
+            [];
 
-        for (
-            const item
-            of precondiciones
+        if (
+            elementos.length > 0
         ) {
 
+            lineas.push("");
             lineas.push(
-                `- ${item}`
+                `${titulo}:`
             );
+
+            for (
+                const elemento
+                of elementos
+            ) {
+
+                lineas.push(
+                    `- ${elemento}`
+                );
+            }
         }
     }
 
-    // ------------------------------------------------------
-    // VERIFICACIONES
-    // ------------------------------------------------------
-
-    const verificaciones =
-        respuesta.verificaciones || [];
 
     if (
-        verificaciones.length > 0
-    ) {
-
-        lineas.push("");
-        lineas.push(
-            "VERIFICAR:"
-        );
-
-        for (
-            const item
-            of verificaciones
-        ) {
-
-            lineas.push(
-                `- ${item}`
-            );
-        }
-    }
-
-    // ------------------------------------------------------
-    // ADVERTENCIAS
-    // ------------------------------------------------------
-
-    const advertencias =
-        respuesta.advertencias || [];
-
-    if (
-        advertencias.length > 0
-    ) {
-
-        lineas.push("");
-        lineas.push(
-            "ADVERTENCIAS:"
-        );
-
-        for (
-            const item
-            of advertencias
-        ) {
-
-            lineas.push(
-                `- ${item}`
-            );
-        }
-    }
-
-    // ------------------------------------------------------
-    // ACCIÓN SI NO CUMPLE
-    // ------------------------------------------------------
-
-    const accionSiNoCumple =
-        respuesta.accion_si_no_cumple || "";
-
-    if (
-        accionSiNoCumple
+        respuesta
+            .accion_si_no_cumple
     ) {
 
         lineas.push("");
@@ -1151,19 +1289,14 @@ function construirRespuestaProcedimiento(
         );
 
         lineas.push(
-            accionSiNoCumple
+            respuesta
+                .accion_si_no_cumple
         );
     }
 
-    // ------------------------------------------------------
-    // ESCALAMIENTO
-    // ------------------------------------------------------
-
-    const escalamiento =
-        respuesta.escalamiento || "";
 
     if (
-        escalamiento
+        respuesta.escalamiento
     ) {
 
         lineas.push("");
@@ -1172,113 +1305,19 @@ function construirRespuestaProcedimiento(
         );
 
         lineas.push(
-            escalamiento
+            respuesta.escalamiento
         );
     }
 
-    return lineas.join("\n");
-}
 
-
-// ==========================================================
-// BUSCAR PROCEDIMIENTOS
-// ==========================================================
-
-function buscarProcedimientos(
-    pregunta,
-    base
-) {
-
-    const resultados = [];
-
-    const procedimientos =
-        base.procedimientos || [];
-
-    for (
-        const procedimiento
-        of procedimientos
-    ) {
-
-        const control =
-            procedimiento.control || {};
-
-        if (
-            control.activo === false
-        ) {
-
-            continue;
-        }
-
-        const evaluacion =
-            puntuarProcedimiento(
-                pregunta,
-                procedimiento
-            );
-
-        const puntuacion =
-            evaluacion.puntuacion;
-
-        if (
-            puntuacion <
-            UMBRAL_RESPUESTA
-        ) {
-
-            continue;
-        }
-
-        let confianza =
-            "BAJA";
-
-        if (
-            puntuacion >=
-            UMBRAL_ALTA
-        ) {
-
-            confianza =
-                "ALTA";
-
-        } else if (
-            puntuacion >=
-            UMBRAL_MEDIA
-        ) {
-
-            confianza =
-                "MEDIA";
-        }
-
-        resultados.push({
-            procedimiento:
-                procedimiento,
-
-            puntuacion:
-                puntuacion,
-
-            confianza:
-                confianza,
-
-            razones:
-                evaluacion.razones
-        });
-    }
-
-    resultados.sort(
-        (
-            a,
-            b
-        ) =>
-            b.puntuacion -
-            a.puntuacion
-    );
-
-    return resultados.slice(
-        0,
-        MAX_RESULTADOS
+    return lineas.join(
+        "\n"
     );
 }
 
 
 // ==========================================================
-// CONSULTA PRINCIPAL
+// CONSULTAR
 // ==========================================================
 
 function consultar(
@@ -1297,32 +1336,34 @@ function consultar(
                 "NINGUNA",
 
             respuesta:
-                "La base de conocimiento todavía no ha sido cargada.",
+                "La base de conocimiento no está cargada.",
 
             resultados:
                 []
         };
     }
 
-    const configuracion =
-        BASE_CONOCIMIENTO.configuracion || {};
 
     const respuestaSinResultado =
-        configuracion.respuesta_sin_resultado ||
+        BASE_CONOCIMIENTO
+            .configuracion
+            ?.respuesta_sin_resultado
+        ||
         (
-            "No existe información confirmada para esta consulta " +
-            "en la base de conocimiento. " +
+            "No existe información confirmada " +
+            "para esta consulta en la base de conocimiento. " +
             "Consulta con tu supervisor a cargo."
         );
 
-    const preguntaLimpia =
+
+    const texto =
         String(
-            pregunta || ""
+            pregunta ||
+            ""
         ).trim();
 
-    if (
-        !preguntaLimpia
-    ) {
+
+    if (!texto) {
 
         return {
             tipo:
@@ -1339,19 +1380,19 @@ function consultar(
         };
     }
 
+
     // ======================================================
-    // 1. BUSCAR CÓDIGO DE MANTENIMIENTO
+    // CÓDIGOS
     // ======================================================
 
     const codigo =
         buscarCodigoMantenimiento(
-            preguntaLimpia,
+            texto,
             BASE_CONOCIMIENTO
         );
 
-    if (
-        codigo
-    ) {
+
+    if (codigo) {
 
         return {
             tipo:
@@ -1373,17 +1414,16 @@ function consultar(
         };
     }
 
-    // ======================================================
-    // 2. SI ESCRIBIÓ UN CÓDIGO QUE NO EXISTE
-    // ======================================================
 
     const codigosEscritos =
         extraerCodigos(
-            preguntaLimpia
+            texto
         );
 
+
     if (
-        codigosEscritos.length > 0
+        codigosEscritos.length >
+        0
     ) {
 
         return {
@@ -1405,17 +1445,15 @@ function consultar(
         };
     }
 
-    // ======================================================
-    // 3. EVITAR PREGUNTAS DEMASIADO CORTAS
-    // ======================================================
 
-    const tokensPregunta =
-        tokenizar(
-            preguntaLimpia
-        );
+    // ======================================================
+    // CONSULTAS CORTAS
+    // ======================================================
 
     if (
-        tokensPregunta.length < 2
+        tokenizar(
+            texto
+        ).length < 2
     ) {
 
         return {
@@ -1433,18 +1471,21 @@ function consultar(
         };
     }
 
+
     // ======================================================
-    // 4. BUSCAR PROCEDIMIENTOS
+    // PROCEDIMIENTOS
     // ======================================================
 
     const resultados =
         buscarProcedimientos(
-            preguntaLimpia,
+            texto,
             BASE_CONOCIMIENTO
         );
 
+
     if (
-        resultados.length === 0
+        resultados.length ===
+        0
     ) {
 
         return {
@@ -1462,12 +1503,10 @@ function consultar(
         };
     }
 
-    // ======================================================
-    // 5. TOMAR MEJOR RESULTADO
-    // ======================================================
 
     const mejor =
         resultados[0];
+
 
     return {
         tipo:
@@ -1497,7 +1536,63 @@ function consultar(
 
 
 // ==========================================================
-// INICIALIZAR MOTOR
+// DIAGNÓSTICO
+// ==========================================================
+
+function diagnosticar(
+    pregunta
+) {
+
+    if (
+        !BASE_CONOCIMIENTO
+    ) {
+
+        console.log(
+            "La base aún no está cargada."
+        );
+
+        return [];
+    }
+
+
+    const resultados =
+        buscarProcedimientos(
+            pregunta,
+            BASE_CONOCIMIENTO
+        );
+
+
+    console.table(
+        resultados.map(
+            resultado => ({
+                id:
+                    resultado
+                        .procedimiento
+                        .id,
+
+                titulo:
+                    resultado
+                        .procedimiento
+                        .titulo,
+
+                puntuacion:
+                    resultado
+                        .puntuacion,
+
+                confianza:
+                    resultado
+                        .confianza
+            })
+        )
+    );
+
+
+    return resultados;
+}
+
+
+// ==========================================================
+// INICIALIZAR
 // ==========================================================
 
 async function inicializarMotor() {
@@ -1517,9 +1612,7 @@ async function inicializarMotor() {
         return {
             ok: false,
             mensaje:
-                (
-                    "No se pudo cargar la base de conocimiento."
-                ),
+                "No se pudo cargar la base.",
             error:
                 error
         };
@@ -1528,7 +1621,7 @@ async function inicializarMotor() {
 
 
 // ==========================================================
-// EXPONER FUNCIONES PARA EL HTML
+// EXPONER AL HTML
 // ==========================================================
 
 window.AsistenteMotor = {
@@ -1538,6 +1631,9 @@ window.AsistenteMotor = {
 
     consultar:
         consultar,
+
+    diagnosticar:
+        diagnosticar,
 
     cargarBaseConocimiento:
         cargarBaseConocimiento,
@@ -1549,8 +1645,5 @@ window.AsistenteMotor = {
         tokenizar,
 
     extraerCodigos:
-        extraerCodigos,
-
-    buscarCodigoMantenimiento:
-        buscarCodigoMantenimiento
+        extraerCodigos
 };
