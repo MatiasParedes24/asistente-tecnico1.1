@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Asistente Técnico
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/estilos.css"
+    >
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <!-- ==================================================
+             CABECERA
+        =================================================== -->
+
+        <header class="encabezado">
+
+            <h1>
+                Asistente Técnico
+            </h1>
+
+            <p>
+                Consulta procedimientos operativos,
+                validaciones, reprogramaciones,
+                rechazos y códigos de mantenimiento.
+            </p>
+
+            <div
+                id="estado"
+                class="estado"
+            >
+                Cargando base de conocimiento...
+            </div>
+
+        </header>
+
+
+        <!-- ==================================================
+             ÁREA DEL CHAT
+        =================================================== -->
+
+        <section
+            id="chat"
+            class="chat"
+        >
+
+            <div class="mensaje asistente">
+
+                <div class="burbuja">
+
+                    Hola. Puedes consultarme procedimientos
+                    operativos o ingresar directamente un
+                    código de mantenimiento.
+
+                    Ejemplos:
+
+                    • ¿Cómo valido niveles FTTH?
+                    • ¿Cómo hago un fuera de TOA?
+                    • ¿Qué hago si el técnico llegó tarde?
+                    • AB03
+                    • PC18
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             FORMULARIO
+        =================================================== -->
+
+        <div class="formulario">
+
+            <input
+                type="text"
+                id="pregunta"
+                placeholder="Escribe tu consulta..."
+                autocomplete="off"
+                disabled
+            >
+
+            <button
+                id="botonConsultar"
+                type="button"
+                disabled
+            >
+                Enviar
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <!-- ======================================================
+         MOTOR DE BÚSQUEDA
+    ======================================================= -->
+
+    <script src="js/motor_busqueda.js"></script>
+
+
+    <!-- ======================================================
+         CONTROL DE LA INTERFAZ
+    ======================================================= -->
+
+    <script>
+
+        // =====================================================
+        // ELEMENTOS DEL HTML
+        // =====================================================
+
+        const chat =
+            document.getElementById(
+                "chat"
+            );
+
+        const estado =
+            document.getElementById(
+                "estado"
+            );
+
+        const pregunta =
+            document.getElementById(
+                "pregunta"
+            );
+
+        const boton =
+            document.getElementById(
+                "botonConsultar"
+            );
+
+
+        // =====================================================
+        // ESCAPAR TEXTO
+        // =====================================================
+
+        function escaparHTML(texto) {
+
+            return String(
+                texto || ""
+            )
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+        }
+
+
+        // =====================================================
+        // AGREGAR MENSAJE AL CHAT
+        // =====================================================
+
+        function agregarMensaje(
+            texto,
+            tipo
+        ) {
+
+            const contenedor =
+                document.createElement(
+                    "div"
+                );
+
+            contenedor.classList.add(
+                "mensaje"
+            );
+
+            contenedor.classList.add(
+                tipo
+            );
+
+            const burbuja =
+                document.createElement(
+                    "div"
+                );
+
+            burbuja.classList.add(
+                "burbuja"
+            );
+
+            burbuja.innerHTML =
+                escaparHTML(
+                    texto
+                )
+                .replaceAll(
+                    "\n",
+                    "<br>"
+                );
+
+            contenedor.appendChild(
+                burbuja
+            );
+
+            chat.appendChild(
+                contenedor
+            );
+
+            chat.scrollTop =
+                chat.scrollHeight;
+        }
+
+
+        // =====================================================
+        // BLOQUEAR / DESBLOQUEAR FORMULARIO
+        // =====================================================
+
+        function cambiarEstadoFormulario(
+            habilitado
+        ) {
+
+            pregunta.disabled =
+                !habilitado;
+
+            boton.disabled =
+                !habilitado;
+        }
+
+
+        // =====================================================
+        // PROCESAR CONSULTA
+        // =====================================================
+
+        function procesarConsulta() {
+
+            const texto =
+                pregunta.value.trim();
+
+            if (!texto) {
+                return;
+            }
+
+            // Mostrar pregunta del usuario
+            agregarMensaje(
+                texto,
+                "usuario"
+            );
+
+            // Limpiar caja
+            pregunta.value = "";
+
+            // Ejecutar búsqueda
+            const resultado =
+                window
+                    .AsistenteMotor
+                    .consultar(
+                        texto
+                    );
+
+            // Mostrar respuesta
+            agregarMensaje(
+                resultado.respuesta,
+                "asistente"
+            );
+
+            // Devolver foco
+            pregunta.focus();
+
+
+            // ================================================
+            // INFORMACIÓN PARA DEPURACIÓN
+            // ================================================
+
+            console.log(
+                "Consulta:",
+                texto
+            );
+
+            console.log(
+                "Resultado:",
+                resultado
+            );
+        }
+
+
+        // =====================================================
+        // BOTÓN ENVIAR
+        // =====================================================
+
+        boton.addEventListener(
+            "click",
+            procesarConsulta
+        );
+
+
+        // =====================================================
+        // ENTER PARA ENVIAR
+        // =====================================================
+
+        pregunta.addEventListener(
+            "keydown",
+            function (evento) {
+
+                if (
+                    evento.key ===
+                    "Enter"
+                ) {
+
+                    evento.preventDefault();
+
+                    procesarConsulta();
+                }
+            }
+        );
+
+
+        // =====================================================
+        // INICIALIZAR ASISTENTE
+        // =====================================================
+
+        async function iniciarAsistente() {
+
+            cambiarEstadoFormulario(
+                false
+            );
+
+            estado.textContent =
+                "Cargando base de conocimiento...";
+
+            estado.classList.remove(
+                "correcto",
+                "error"
+            );
+
+            try {
+
+                const resultado =
+                    await window
+                        .AsistenteMotor
+                        .inicializar();
+
+                if (
+                    resultado.ok
+                ) {
+
+                    estado.textContent =
+                        "Base de conocimiento cargada correctamente.";
+
+                    estado.classList.add(
+                        "correcto"
+                    );
+
+                    cambiarEstadoFormulario(
+                        true
+                    );
+
+                    pregunta.focus();
+
+                } else {
+
+                    estado.textContent =
+                        "No se pudo cargar la base de conocimiento.";
+
+                    estado.classList.add(
+                        "error"
+                    );
+
+                    agregarMensaje(
+                        "No se pudo cargar la base de conocimiento. " +
+                        "Verifica que el archivo " +
+                        "data/base_conocimiento.json exista.",
+                        "asistente"
+                    );
+                }
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                estado.textContent =
+                    "Error cargando la base de conocimiento.";
+
+                estado.classList.add(
+                    "error"
+                );
+
+                agregarMensaje(
+                    "Ocurrió un error al iniciar el asistente. " +
+                    "Verifica la estructura del repositorio.",
+                    "asistente"
+                );
+            }
+        }
+
+
+        // =====================================================
+        // INICIAR
+        // =====================================================
+
+        iniciarAsistente();
+
+    </script>
+
+</body>
+
+</html>
