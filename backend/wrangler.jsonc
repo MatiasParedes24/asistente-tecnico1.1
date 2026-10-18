@@ -1,0 +1,5 @@
+{
+    "name": "asistente-tecnico-gemini",
+    "main": "src/index.js",
+    "compatibility_date": "2026-10-17"
+}

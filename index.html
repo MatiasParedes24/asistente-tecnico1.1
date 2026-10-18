@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="es">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -17,17 +19,24 @@
         rel="stylesheet"
         href="css/estilos.css"
     >
+
 </head>
+
 
 <body>
 
-    <main class="contenedor">
+    <main
+        class="contenedor"
+    >
+
 
         <!-- ==================================================
-             CABECERA
+             ENCABEZADO
         =================================================== -->
 
-        <header class="encabezado">
+        <header
+            class="encabezado"
+        >
 
             <h1>
                 Asistente Técnico
@@ -50,7 +59,7 @@
 
 
         <!-- ==================================================
-             ÁREA DEL CHAT
+             CHAT
         =================================================== -->
 
         <section
@@ -58,22 +67,23 @@
             class="chat"
         >
 
-            <div class="mensaje asistente">
+            <div
+                class="mensaje asistente"
+            >
 
-                <div class="burbuja">
+                <div
+                    class="burbuja"
+                >
+Hola. Puedes realizar una consulta operativa
+o ingresar directamente un código de mantenimiento.
 
-                    Hola. Puedes consultarme procedimientos
-                    operativos o ingresar directamente un
-                    código de mantenimiento.
+Ejemplos:
 
-                    Ejemplos:
-
-                    • ¿Cómo valido niveles FTTH?
-                    • ¿Cómo hago un fuera de TOA?
-                    • ¿Qué hago si el técnico llegó tarde?
-                    • AB03
-                    • PC18
-
+• ¿Cómo valido niveles FTTH?
+• ¿Cómo hago un fuera de TOA?
+• ¿Qué hago si el técnico llegó tarde?
+• AB03
+• PC18
                 </div>
 
             </div>
@@ -85,7 +95,9 @@
              FORMULARIO
         =================================================== -->
 
-        <div class="formulario">
+        <div
+            class="formulario"
+        >
 
             <input
                 type="text"
@@ -109,20 +121,31 @@
 
 
     <!-- ======================================================
-         MOTOR DE BÚSQUEDA
+         MOTOR LOCAL
     ======================================================= -->
 
-    <script src="js/motor_busqueda.js"></script>
+    <script
+        src="js/motor_busqueda.js"
+    ></script>
 
 
     <!-- ======================================================
-         CONTROL DE LA INTERFAZ
+         IA
+    ======================================================= -->
+
+    <script
+        src="js/ia_gemini.js"
+    ></script>
+
+
+    <!-- ======================================================
+         INTERFAZ
     ======================================================= -->
 
     <script>
 
         // =====================================================
-        // ELEMENTOS DEL HTML
+        // ELEMENTOS
         // =====================================================
 
         const chat =
@@ -147,10 +170,12 @@
 
 
         // =====================================================
-        // ESCAPAR TEXTO
+        // ESCAPAR HTML
         // =====================================================
 
-        function escaparHTML(texto) {
+        function escaparHTML(
+            texto
+        ) {
 
             return String(
                 texto || ""
@@ -179,7 +204,25 @@
 
 
         // =====================================================
-        // AGREGAR MENSAJE AL CHAT
+        // FORMATEAR TEXTO
+        // =====================================================
+
+        function formatearTexto(
+            texto
+        ) {
+
+            return escaparHTML(
+                texto
+            )
+                .replaceAll(
+                    "\n",
+                    "<br>"
+                );
+        }
+
+
+        // =====================================================
+        // AGREGAR MENSAJE
         // =====================================================
 
         function agregarMensaje(
@@ -193,12 +236,10 @@
                 );
 
             contenedor.classList.add(
-                "mensaje"
-            );
-
-            contenedor.classList.add(
+                "mensaje",
                 tipo
             );
+
 
             const burbuja =
                 document.createElement(
@@ -210,13 +251,10 @@
             );
 
             burbuja.innerHTML =
-                escaparHTML(
+                formatearTexto(
                     texto
-                )
-                .replaceAll(
-                    "\n",
-                    "<br>"
                 );
+
 
             contenedor.appendChild(
                 burbuja
@@ -226,13 +264,36 @@
                 contenedor
             );
 
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+
+            return burbuja;
+        }
+
+
+        // =====================================================
+        // ACTUALIZAR MENSAJE
+        // =====================================================
+
+        function actualizarMensaje(
+            burbuja,
+            texto
+        ) {
+
+            burbuja.innerHTML =
+                formatearTexto(
+                    texto
+                );
+
             chat.scrollTop =
                 chat.scrollHeight;
         }
 
 
         // =====================================================
-        // BLOQUEAR / DESBLOQUEAR FORMULARIO
+        // HABILITAR / DESHABILITAR
         // =====================================================
 
         function cambiarEstadoFormulario(
@@ -251,60 +312,231 @@
         // PROCESAR CONSULTA
         // =====================================================
 
-        function procesarConsulta() {
+        async function procesarConsulta() {
 
             const texto =
                 pregunta.value.trim();
 
-            if (!texto) {
+
+            if (
+                !texto
+            ) {
                 return;
             }
 
-            // Mostrar pregunta del usuario
+
+            cambiarEstadoFormulario(
+                false
+            );
+
+
             agregarMensaje(
                 texto,
                 "usuario"
             );
 
-            // Limpiar caja
-            pregunta.value = "";
 
-            // Ejecutar búsqueda
-            const resultado =
+            pregunta.value =
+                "";
+
+
+            // =================================================
+            // 1. MOTOR LOCAL
+            // =================================================
+
+            const resultadoLocal =
                 window
                     .AsistenteMotor
                     .consultar(
                         texto
                     );
 
-            // Mostrar respuesta
-            agregarMensaje(
-                resultado.respuesta,
-                "asistente"
+
+            console.log(
+                "Resultado local:",
+                resultadoLocal
             );
 
-            // Devolver foco
+
+            // =================================================
+            // 2. CÓDIGOS
+            // No necesitan IA
+            // =================================================
+
+            if (
+                resultadoLocal.tipo ===
+                "codigo"
+            ) {
+
+                agregarMensaje(
+                    resultadoLocal.respuesta,
+                    "asistente"
+                );
+
+                cambiarEstadoFormulario(
+                    true
+                );
+
+                pregunta.focus();
+
+                return;
+            }
+
+
+            // =================================================
+            // 3. SIN RESULTADOS
+            // Gemini NO interviene
+            // =================================================
+
+            if (
+                resultadoLocal.tipo ===
+                "sin_resultado"
+                ||
+                resultadoLocal.tipo ===
+                "error"
+            ) {
+
+                agregarMensaje(
+                    resultadoLocal.respuesta,
+                    "asistente"
+                );
+
+                cambiarEstadoFormulario(
+                    true
+                );
+
+                pregunta.focus();
+
+                return;
+            }
+
+
+            // =================================================
+            // 4. CONFIANZA BAJA
+            // Tampoco usamos Gemini
+            // =================================================
+
+            if (
+                resultadoLocal.confianza ===
+                "BAJA"
+            ) {
+
+                agregarMensaje(
+                    "No existe información suficientemente confirmada " +
+                    "para esta consulta en la base de conocimiento. " +
+                    "Consulta con tu supervisor a cargo.",
+                    "asistente"
+                );
+
+                cambiarEstadoFormulario(
+                    true
+                );
+
+                pregunta.focus();
+
+                return;
+            }
+
+
+            // =================================================
+            // 5. PROCEDIMIENTO ENCONTRADO
+            // Gemini actúa como apoyo
+            // =================================================
+
+            const mensaje =
+                agregarMensaje(
+                    "Analizando información confirmada...",
+                    "asistente"
+                );
+
+
+            try {
+
+                const resultadoIA =
+                    await window
+                        .AsistenteIA
+                        .consultar(
+                            texto,
+                            resultadoLocal.resultados
+                        );
+
+
+                console.log(
+                    "Resultado IA:",
+                    resultadoIA
+                );
+
+
+                // =================================================
+                // IA FUNCIONÓ
+                // =================================================
+
+                if (
+                    resultadoIA.ok
+                ) {
+
+                    actualizarMensaje(
+                        mensaje,
+                        resultadoIA.respuesta
+                    );
+
+
+                    console.log(
+                        "Procedimientos utilizados:",
+                        resultadoIA
+                            .procedimientos_usados
+                    );
+
+                }
+
+
+                // =================================================
+                // IA FALLÓ
+                // Se utiliza respuesta local
+                // =================================================
+
+                else {
+
+                    console.warn(
+                        "Gemini no disponible. " +
+                        "Se utiliza respuesta local."
+                    );
+
+
+                    actualizarMensaje(
+                        mensaje,
+                        resultadoLocal.respuesta
+                    );
+                }
+
+
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Error usando IA:",
+                    error
+                );
+
+
+                actualizarMensaje(
+                    mensaje,
+                    resultadoLocal.respuesta
+                );
+            }
+
+
+            cambiarEstadoFormulario(
+                true
+            );
+
             pregunta.focus();
-
-
-            // ================================================
-            // INFORMACIÓN PARA DEPURACIÓN
-            // ================================================
-
-            console.log(
-                "Consulta:",
-                texto
-            );
-
-            console.log(
-                "Resultado:",
-                resultado
-            );
         }
 
 
         // =====================================================
-        // BOTÓN ENVIAR
+        // BOTÓN
         // =====================================================
 
         boton.addEventListener(
@@ -314,12 +546,14 @@
 
 
         // =====================================================
-        // ENTER PARA ENVIAR
+        // ENTER
         // =====================================================
 
         pregunta.addEventListener(
             "keydown",
-            function (evento) {
+            function (
+                evento
+            ) {
 
                 if (
                     evento.key ===
@@ -335,7 +569,7 @@
 
 
         // =====================================================
-        // INICIALIZAR ASISTENTE
+        // INICIAR ASISTENTE
         // =====================================================
 
         async function iniciarAsistente() {
@@ -344,13 +578,16 @@
                 false
             );
 
+
             estado.textContent =
                 "Cargando base de conocimiento...";
+
 
             estado.classList.remove(
                 "correcto",
                 "error"
             );
+
 
             try {
 
@@ -358,6 +595,7 @@
                     await window
                         .AsistenteMotor
                         .inicializar();
+
 
                 if (
                     resultado.ok
@@ -370,34 +608,30 @@
                         "correcto"
                     );
 
+
                     cambiarEstadoFormulario(
                         true
                     );
+
 
                     pregunta.focus();
 
                 } else {
 
-                    estado.textContent =
-                        "No se pudo cargar la base de conocimiento.";
-
-                    estado.classList.add(
-                        "error"
-                    );
-
-                    agregarMensaje(
-                        "No se pudo cargar la base de conocimiento. " +
-                        "Verifica que el archivo " +
-                        "data/base_conocimiento.json exista.",
-                        "asistente"
+                    throw new Error(
+                        resultado.mensaje
                     );
                 }
 
-            } catch (error) {
+
+            } catch (
+                error
+            ) {
 
                 console.error(
                     error
                 );
+
 
                 estado.textContent =
                     "Error cargando la base de conocimiento.";
@@ -406,22 +640,19 @@
                     "error"
                 );
 
+
                 agregarMensaje(
-                    "Ocurrió un error al iniciar el asistente. " +
-                    "Verifica la estructura del repositorio.",
+                    "No se pudo iniciar el asistente.",
                     "asistente"
                 );
             }
         }
 
 
-        // =====================================================
-        // INICIAR
-        // =====================================================
-
         iniciarAsistente();
 
     </script>
+
 
 </body>
 
