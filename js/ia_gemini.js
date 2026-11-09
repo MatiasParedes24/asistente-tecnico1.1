@@ -1,5 +1,19 @@
 // ==========================================================
-// IA GEMINI - ASISTENTE TÉCNICO
+// IA GEMINI - ASISTENTE OPERATIVO
+//
+// NUEVO FLUJO:
+//
+// Pregunta natural
+//      ↓
+// Cloudflare Worker
+//      ↓
+// Gemini busca semánticamente en la base
+//      ↓
+// Worker verifica las referencias
+//      ↓
+// Gemini responde SOLO con información autorizada
+//
+// El motor local queda como respaldo.
 // ==========================================================
 
 (() => {
@@ -16,85 +30,20 @@
 
 
     // ======================================================
-    // OBTENER IDS DE LOS PROCEDIMIENTOS
+    // ENVIAR SOLICITUD AL BACKEND
     // ======================================================
 
-    function obtenerIdsProcedimientos(
-        resultadosMotor
+    async function enviarSolicitud(
+        datosEnvio
     ) {
-
-        if (
-            !Array.isArray(
-                resultadosMotor
-            )
-        ) {
-
-            return [];
-        }
-
-
-        return resultadosMotor
-            .slice(
-                0,
-                3
-            )
-            .map(
-                resultado =>
-                    resultado
-                        ?.procedimiento
-                        ?.id || ""
-            )
-            .filter(
-                id => id
-            );
-    }
-
-
-    // ======================================================
-    // CONSULTAR GEMINI
-    // ======================================================
-
-    async function consultarGemini(
-        pregunta,
-        resultadosMotor
-    ) {
-
-        const ids =
-            obtenerIdsProcedimientos(
-                resultadosMotor
-            );
-
-
-        // --------------------------------------------------
-        // Sin procedimientos autorizados
-        // --------------------------------------------------
-
-        if (
-            ids.length ===
-            0
-        ) {
-
-            return {
-
-                ok:
-                    false,
-
-                error:
-                    "No existen procedimientos autorizados para enviar a la IA."
-            };
-        }
-
 
         try {
-
-            // --------------------------------------------------
-            // CONSULTAR CLOUDFLARE WORKER
-            // --------------------------------------------------
 
             const respuesta =
                 await fetch(
                     URL_BACKEND_GEMINI,
                     {
+
                         method:
                             "POST",
 
@@ -106,22 +55,15 @@
 
                         body:
                             JSON.stringify(
-                                {
-
-                                    pregunta:
-                                        pregunta,
-
-                                    ids:
-                                        ids
-                                }
+                                datosEnvio
                             )
                     }
                 );
 
 
-            // --------------------------------------------------
+            // =================================================
             // LEER RESPUESTA
-            // --------------------------------------------------
+            // =================================================
 
             let datos;
 
@@ -131,12 +73,23 @@
                 datos =
                     await respuesta.json();
 
-            } catch {
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Respuesta no JSON:",
+                    error
+                );
+
 
                 return {
 
                     ok:
                         false,
+
+                    tipo:
+                        "error",
 
                     error:
                         "El backend devolvió una respuesta inválida."
@@ -144,16 +97,16 @@
             }
 
 
-            // --------------------------------------------------
-            // ERROR DEL BACKEND
-            // --------------------------------------------------
+            // =================================================
+            // ERROR HTTP
+            // =================================================
 
             if (
                 !respuesta.ok
             ) {
 
                 console.error(
-                    "Error del backend Gemini:",
+                    "Error backend Gemini:",
                     datos
                 );
 
@@ -163,51 +116,73 @@
                     ok:
                         false,
 
+                    tipo:
+                        datos.tipo ||
+                        "error",
+
                     error:
                         datos.error ||
-                        "No fue posible utilizar Gemini."
+                        "No fue posible utilizar el servicio de IA."
                 };
             }
 
 
-            // --------------------------------------------------
-            // SIN RESPUESTA
-            // --------------------------------------------------
-
-            if (
-                !datos.respuesta
-            ) {
-
-                return {
-
-                    ok:
-                        false,
-
-                    error:
-                        "Gemini no devolvió una respuesta."
-                };
-            }
-
-
-            // --------------------------------------------------
+            // =================================================
             // RESPUESTA CORRECTA
-            // --------------------------------------------------
+            // =================================================
 
             return {
 
                 ok:
-                    true,
+                    datos.ok === true,
+
+                tipo:
+                    datos.tipo ||
+                    "respuesta",
 
                 respuesta:
-                    datos.respuesta,
+                    datos.respuesta ||
+                    "",
+
+                opciones:
+                    Array.isArray(
+                        datos.opciones
+                    )
+                        ?
+                        datos.opciones
+                        :
+                        [],
 
                 modelo:
                     datos.modelo ||
                     "",
 
+                fuentes_usadas:
+                    Array.isArray(
+                        datos.fuentes_usadas
+                    )
+                        ?
+                        datos.fuentes_usadas
+                        :
+                        [],
+
                 procedimientos_usados:
-                    datos.procedimientos_usados ||
-                    ids
+                    Array.isArray(
+                        datos.procedimientos_usados
+                    )
+                        ?
+                        datos.procedimientos_usados
+                        :
+                        [],
+
+                codigos_usados:
+                    Array.isArray(
+                        datos.codigos_usados
+                    )
+                        ?
+                        datos.codigos_usados
+                        :
+                        []
             };
 
 
@@ -226,6 +201,9 @@
                 ok:
                     false,
 
+                tipo:
+                    "error",
+
                 error:
                     "No se pudo establecer conexión con el servicio de IA."
             };
@@ -234,13 +212,342 @@
 
 
     // ======================================================
-    // EXPONER ÚNICAMENTE EL MÓDULO
+    // CONSULTA SEMÁNTICA NORMAL
+    //
+    // El navegador NO decide qué procedimiento usar.
+    // El Worker + Gemini realizan la recuperación semántica.
+    // ======================================================
+
+    async function consultarSemantico(
+        pregunta
+    ) {
+
+        const texto =
+            String(
+                pregunta ||
+                ""
+            )
+            .trim();
+
+
+        if (
+            !texto
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                tipo:
+                    "error",
+
+                error:
+                    "La consulta está vacía."
+            };
+        }
+
+
+        return await enviarSolicitud(
+            {
+
+                pregunta:
+                    texto
+            }
+        );
+    }
+
+
+    // ======================================================
+    // CONSULTAR CON REFERENCIAS SELECCIONADAS
+    //
+    // Se utiliza cuando Gemini detecta una pregunta ambigua
+    // y el usuario selecciona una tarjeta.
+    //
+    // Ejemplo:
+    //
+    // refs = ["P:VAL002"]
+    // ======================================================
+
+    async function consultarConReferencias(
+        pregunta,
+        referencias
+    ) {
+
+        const texto =
+            String(
+                pregunta ||
+                ""
+            )
+            .trim();
+
+
+        const refs =
+            Array.isArray(
+                referencias
+            )
+                ?
+                referencias
+                    .map(
+                        referencia =>
+                            String(
+                                referencia ||
+                                ""
+                            )
+                            .trim()
+                            .toUpperCase()
+                    )
+                    .filter(
+                        Boolean
+                    )
+                :
+                [];
+
+
+        if (
+            !texto
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                tipo:
+                    "error",
+
+                error:
+                    "La consulta está vacía."
+            };
+        }
+
+
+        if (
+            refs.length ===
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                tipo:
+                    "error",
+
+                error:
+                    "No se seleccionó una referencia válida."
+            };
+        }
+
+
+        return await enviarSolicitud(
+            {
+
+                pregunta:
+                    texto,
+
+                refs:
+                    refs
+            }
+        );
+    }
+
+
+    // ======================================================
+    // EXTRAER REFERENCIAS DESDE RESULTADOS DEL MOTOR LOCAL
+    //
+    // Se conserva únicamente por compatibilidad y respaldo.
+    // ======================================================
+
+    function obtenerReferenciasLocales(
+        resultadosMotor
+    ) {
+
+        if (
+            !Array.isArray(
+                resultadosMotor
+            )
+        ) {
+
+            return [];
+        }
+
+
+        return resultadosMotor
+
+            .map(
+                resultado => {
+
+                    const id =
+                        resultado
+                            ?.procedimiento
+                            ?.id;
+
+
+                    if (
+                        !id
+                    ) {
+
+                        return "";
+                    }
+
+
+                    return (
+                        "P:" +
+                        String(
+                            id
+                        )
+                        .trim()
+                        .toUpperCase()
+                    );
+                }
+            )
+
+            .filter(
+                Boolean
+            )
+
+            .slice(
+                0,
+                5
+            );
+    }
+
+
+    // ======================================================
+    // CONSULTAR UTILIZANDO RESULTADOS LOCALES
+    //
+    // Solo se usa como compatibilidad con código anterior.
+    // ======================================================
+
+    async function consultarConResultadosLocales(
+        pregunta,
+        resultadosMotor
+    ) {
+
+        const refs =
+            obtenerReferenciasLocales(
+                resultadosMotor
+            );
+
+
+        if (
+            refs.length ===
+            0
+        ) {
+
+            return await consultarSemantico(
+                pregunta
+            );
+        }
+
+
+        return await consultarConReferencias(
+            pregunta,
+            refs
+        );
+    }
+
+
+    // ======================================================
+    // COMPATIBILIDAD
+    //
+    // Permite que código anterior todavía pueda ejecutar:
+    //
+    // AsistenteIA.consultar(pregunta, resultadosMotor)
+    //
+    // Pero el nuevo frontend utilizará:
+    //
+    // AsistenteIA.consultar(pregunta)
+    // ======================================================
+
+    async function consultar(
+        pregunta,
+        resultadosMotor = null
+    ) {
+
+        if (
+            Array.isArray(
+                resultadosMotor
+            )
+            &&
+            resultadosMotor.length >
+            0
+        ) {
+
+            return await consultarConResultadosLocales(
+                pregunta,
+                resultadosMotor
+            );
+        }
+
+
+        return await consultarSemantico(
+            pregunta
+        );
+    }
+
+
+    // ======================================================
+    // COMPATIBILIDAD CON FUNCIÓN ANTIGUA
+    // ======================================================
+
+    function obtenerIdsProcedimientos(
+        resultadosMotor
+    ) {
+
+        if (
+            !Array.isArray(
+                resultadosMotor
+            )
+        ) {
+
+            return [];
+        }
+
+
+        return resultadosMotor
+
+            .map(
+                resultado =>
+                    resultado
+                        ?.procedimiento
+                        ?.id ||
+                    ""
+            )
+
+            .filter(
+                Boolean
+            )
+
+            .slice(
+                0,
+                5
+            );
+    }
+
+
+    // ======================================================
+    // EXPONER API
     // ======================================================
 
     window.AsistenteIA = {
 
         consultar:
-            consultarGemini,
+            consultar,
+
+        consultarSemantico:
+            consultarSemantico,
+
+        consultarConReferencias:
+            consultarConReferencias,
+
+        consultarConResultadosLocales:
+            consultarConResultadosLocales,
+
+        obtenerReferenciasLocales:
+            obtenerReferenciasLocales,
 
         obtenerIdsProcedimientos:
             obtenerIdsProcedimientos

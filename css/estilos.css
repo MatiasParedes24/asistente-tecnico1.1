@@ -1,232 +1,2000 @@
-/* =========================================================
-   ESTILOS GENERALES
-========================================================= */
+/* ==========================================================
+   VARIABLES GENERALES
+========================================================== */
+
+:root {
+
+    --rojo:
+        #d71920;
+
+    --rojo-oscuro:
+        #a60f15;
+
+    --rojo-profundo:
+        #761014;
+
+    --gris-fondo:
+        #eef1f5;
+
+    --gris-suave:
+        #f7f8fa;
+
+    --gris-borde:
+        #e1e5e9;
+
+    --texto:
+        #252a30;
+
+    --texto-secundario:
+        #6f7780;
+
+    --verde:
+        #1d8c5b;
+
+    --amarillo:
+        #f1b82d;
+}
+
+
+/* ==========================================================
+   RESET
+========================================================== */
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
 }
+
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f6f8;
-    color: #1f2937;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+
+    min-height:
+        100vh;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(215, 25, 32, 0.08),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(37, 92, 165, 0.06),
+            transparent 30%
+        ),
+
+        var(--gris-fondo);
+
+    color:
+        var(--texto);
+
+    padding:
+        28px 18px;
 }
 
 
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-========================================================= */
+/* ==========================================================
+   CONTENEDOR
+========================================================== */
 
-.contenedor {
-    width: 100%;
-    max-width: 900px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
+.app {
+
+    width:
+        100%;
+
+    max-width:
+        1060px;
+
+    margin:
+        0 auto;
+
+    background:
+        #ffffff;
+
+    border-radius:
+        22px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid rgba(0, 0, 0, 0.06);
+
+    box-shadow:
+        0 20px 55px
+        rgba(29, 35, 45, 0.12);
 }
 
 
-/* =========================================================
+/* ==========================================================
    CABECERA
-========================================================= */
+========================================================== */
 
-.encabezado {
-    padding: 24px;
-    border-bottom: 1px solid #e5e7eb;
-}
+.cabecera {
 
-.encabezado h1 {
-    font-size: 28px;
-    margin-bottom: 8px;
-}
+    position:
+        relative;
 
-.encabezado p {
-    color: #6b7280;
-    font-size: 14px;
-}
+    overflow:
+        hidden;
 
+    padding:
+        29px 34px 18px;
 
-/* =========================================================
-   ESTADO DE LA BASE
-========================================================= */
+    color:
+        #ffffff;
 
-.estado {
-    margin-top: 12px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.estado.correcto {
-    color: #15803d;
-}
-
-.estado.error {
-    color: #b91c1c;
+    background:
+        linear-gradient(
+            120deg,
+            #8f1015 0%,
+            #c6171e 55%,
+            #e32a30 100%
+        );
 }
 
 
-/* =========================================================
-   ÁREA DEL CHAT
-========================================================= */
+.cabecera-decoracion {
+
+    position:
+        absolute;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    pointer-events:
+        none;
+}
+
+
+.decoracion-1 {
+
+    width:
+        240px;
+
+    height:
+        240px;
+
+    right:
+        -85px;
+
+    top:
+        -130px;
+}
+
+
+.decoracion-2 {
+
+    width:
+        140px;
+
+    height:
+        140px;
+
+    left:
+        43%;
+
+    bottom:
+        -110px;
+}
+
+
+.cabecera-contenido {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        30px;
+}
+
+
+/* ==========================================================
+   IDENTIDAD
+========================================================== */
+
+.identidad-asistente {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        17px;
+}
+
+
+.icono-principal {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    width:
+        66px;
+
+    height:
+        66px;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        18px;
+
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.20);
+}
+
+
+.icono-principal svg {
+
+    width:
+        46px;
+
+    height:
+        46px;
+}
+
+
+.svg-relleno {
+
+    fill:
+        #ffffff;
+}
+
+
+.svg-linea {
+
+    fill:
+        none;
+
+    stroke:
+        #ffffff;
+
+    stroke-width:
+        4;
+
+    stroke-linecap:
+        round;
+}
+
+
+.svg-detalle {
+
+    fill:
+        #ffd15c;
+}
+
+
+.etiqueta-producto {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        5px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.8px;
+
+    text-transform:
+        uppercase;
+
+    color:
+        rgba(255, 255, 255, 0.78);
+}
+
+
+.identidad-asistente h1 {
+
+    font-size:
+        30px;
+
+    line-height:
+        1.05;
+
+    font-weight:
+        700;
+}
+
+
+.identidad-asistente p {
+
+    margin-top:
+        7px;
+
+    color:
+        rgba(255, 255, 255, 0.82);
+
+    font-size:
+        13px;
+}
+
+
+/* ==========================================================
+   MARCA
+========================================================== */
+
+.marca-operador {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        9px 12px 9px 9px;
+
+    border-radius:
+        15px;
+
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.20);
+}
+
+
+.marca-icono {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    width:
+        43px;
+
+    height:
+        43px;
+
+    border-radius:
+        12px;
+
+    background:
+        #ffffff;
+}
+
+
+.marca-icono svg {
+
+    width:
+        35px;
+
+    height:
+        35px;
+}
+
+
+.marca-cabeza {
+
+    fill:
+        var(--rojo);
+}
+
+
+.marca-headset {
+
+    fill:
+        none;
+
+    stroke:
+        var(--rojo);
+
+    stroke-width:
+        4;
+
+    stroke-linecap:
+        round;
+}
+
+
+.marca-texto {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    line-height:
+        1.15;
+}
+
+
+.marca-texto strong {
+
+    font-size:
+        15px;
+
+    color:
+        #ffffff;
+}
+
+
+.marca-texto span {
+
+    margin-top:
+        3px;
+
+    font-size:
+        11px;
+
+    color:
+        rgba(255, 255, 255, 0.78);
+}
+
+
+/* ==========================================================
+   ESTADO
+========================================================== */
+
+.barra-estado {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    margin-top:
+        23px;
+
+    flex-wrap:
+        wrap;
+}
+
+
+.estado-sistema,
+.estado-secundario {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        6px 10px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        11px;
+
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.14);
+}
+
+
+.punto-estado {
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    background:
+        currentColor;
+}
+
+
+.estado-sistema.cargando {
+
+    color:
+        #ffe49c;
+}
+
+
+.estado-sistema.disponible {
+
+    color:
+        #adf1cb;
+}
+
+
+.estado-sistema.error {
+
+    color:
+        #ffd1d1;
+}
+
+
+.estado-secundario {
+
+    color:
+        rgba(255, 255, 255, 0.82);
+}
+
+
+.estado-icono {
+
+    color:
+        #9df2c3;
+}
+
+
+/* ==========================================================
+   AVISO
+========================================================== */
+
+.aviso-vigencia {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        15px;
+
+    margin:
+        19px 28px 0;
+
+    padding:
+        16px 17px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #fff9e8,
+            #fffdf7
+        );
+
+    border:
+        1px solid #f0dea6;
+
+    border-radius:
+        14px;
+
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease,
+        max-height 0.4s ease;
+
+    max-height:
+        180px;
+}
+
+
+.aviso-vigencia.ocultando {
+
+    opacity:
+        0;
+
+    transform:
+        translateY(-8px);
+
+    max-height:
+        0;
+
+    overflow:
+        hidden;
+}
+
+
+.aviso-vigencia.oculto {
+
+    display:
+        none;
+}
+
+
+.aviso-icono {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        37px;
+
+    height:
+        37px;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        11px;
+
+    background:
+        #f4b728;
+
+    color:
+        #ffffff;
+
+    font-weight:
+        800;
+
+    font-size:
+        20px;
+}
+
+
+.aviso-contenido {
+
+    flex:
+        1;
+}
+
+
+.aviso-titulo {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        5px;
+
+    color:
+        #6b5108;
+}
+
+
+.aviso-badge {
+
+    padding:
+        2px 7px;
+
+    border-radius:
+        10px;
+
+    background:
+        #fce9b4;
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+}
+
+
+.aviso-contenido p {
+
+    margin-bottom:
+        4px;
+
+    color:
+        #4f4529;
+
+    font-size:
+        13px;
+}
+
+
+.aviso-contenido small {
+
+    color:
+        #776c4b;
+}
+
+
+.cerrar-aviso {
+
+    border:
+        none;
+
+    background:
+        transparent;
+
+    color:
+        #947d43;
+
+    font-size:
+        22px;
+
+    cursor:
+        pointer;
+}
+
+
+/* ==========================================================
+   PRINCIPAL
+========================================================== */
+
+.zona-principal {
+
+    padding:
+        24px 28px 0;
+}
+
+
+/* ==========================================================
+   CONSULTAS RÁPIDAS
+========================================================== */
+
+.consultas-rapidas {
+
+    margin-bottom:
+        20px;
+}
+
+
+.consultas-encabezado {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-end;
+
+    margin-bottom:
+        13px;
+}
+
+
+.mini-etiqueta {
+
+    display:
+        block;
+
+    color:
+        var(--rojo);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    text-transform:
+        uppercase;
+}
+
+
+.consultas-encabezado h2 {
+
+    font-size:
+        17px;
+
+    color:
+        #292e34;
+}
+
+
+.texto-variable {
+
+    color:
+        #969ba1;
+
+    font-size:
+        10px;
+}
+
+
+.botones-rapidos {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        10px;
+}
+
+
+.boton-rapido {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        11px;
+
+    text-align:
+        left;
+
+    font-family:
+        inherit;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid var(--gris-borde);
+
+    border-radius:
+        13px;
+
+    cursor:
+        pointer;
+
+    transition:
+        0.18s ease;
+}
+
+
+.boton-rapido:hover:not(:disabled) {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(215, 25, 32, 0.35);
+
+    background:
+        #fffafa;
+}
+
+
+.boton-rapido:disabled {
+
+    opacity:
+        0.55;
+
+    cursor:
+        default;
+}
+
+
+.boton-rapido-icono {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        37px;
+
+    height:
+        37px;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        10px;
+
+    background:
+        #fff0f0;
+
+    color:
+        var(--rojo);
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+}
+
+
+.boton-rapido-contenido {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    min-width:
+        0;
+}
+
+
+.boton-rapido-contenido strong {
+
+    font-size:
+        12px;
+
+    color:
+        #34393f;
+}
+
+
+.boton-rapido-contenido small {
+
+    margin-top:
+        3px;
+
+    color:
+        #858b92;
+
+    font-size:
+        9px;
+}
+
+
+/* ==========================================================
+   CHAT
+========================================================== */
 
 .chat {
-    min-height: 400px;
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 24px;
-    background: #f9fafb;
+
+    min-height:
+        380px;
+
+    max-height:
+        600px;
+
+    overflow-y:
+        auto;
+
+    padding:
+        25px;
+
+    border:
+        1px solid #e5e8ec;
+
+    border-radius:
+        17px;
+
+    background:
+        #f8f9fb;
+
+    scroll-behavior:
+        smooth;
 }
 
 
-/* =========================================================
+/* ==========================================================
    MENSAJES
-========================================================= */
+========================================================== */
 
 .mensaje {
-    margin-bottom: 16px;
-    display: flex;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        10px;
+
+    width:
+        100%;
+
+    margin-bottom:
+        23px;
 }
+
 
 .mensaje.usuario {
-    justify-content: flex-end;
+
+    justify-content:
+        flex-end;
 }
 
-.mensaje.asistente {
-    justify-content: flex-start;
+
+.avatar-mensaje {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        12px;
 }
+
+
+.asistente-avatar {
+
+    color:
+        var(--rojo);
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid #e4e7eb;
+}
+
+
+.asistente-avatar svg {
+
+    width:
+        27px;
+
+    height:
+        27px;
+
+    fill:
+        currentColor;
+
+    stroke:
+        currentColor;
+
+    stroke-width:
+        3;
+}
+
+
+.usuario-avatar {
+
+    background:
+        linear-gradient(
+            135deg,
+            #c71920,
+            #8f1015
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+.contenido-mensaje {
+
+    max-width:
+        76%;
+}
+
+
+.cabecera-mensaje {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin:
+        0 5px 5px;
+}
+
+
+.mensaje.usuario
+.cabecera-mensaje {
+
+    justify-content:
+        flex-end;
+}
+
+
+.nombre-mensaje {
+
+    color:
+        #686f77;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+}
+
+
+.badge-mensaje {
+
+    padding:
+        3px 7px;
+
+    border-radius:
+        10px;
+
+    background:
+        #eef1f4;
+
+    color:
+        #6b737c;
+
+    font-size:
+        8px;
+
+    font-weight:
+        700;
+}
+
 
 .burbuja {
-    max-width: 78%;
-    padding: 14px 16px;
-    border-radius: 14px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 15px;
-}
 
-.usuario .burbuja {
-    background: #dbeafe;
-    border-bottom-right-radius: 4px;
-}
+    padding:
+        13px 16px;
 
-.asistente .burbuja {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-bottom-left-radius: 4px;
+    line-height:
+        1.55;
+
+    font-size:
+        13px;
+
+    white-space:
+        pre-wrap;
+
+    word-break:
+        break-word;
 }
 
 
-/* =========================================================
-   FORMULARIO DE CONSULTA
-========================================================= */
+.mensaje.asistente
+.burbuja {
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid #e2e5e9;
+
+    border-radius:
+        5px 14px 14px 14px;
+
+    color:
+        #30353b;
+}
+
+
+.mensaje.usuario
+.burbuja {
+
+    background:
+        linear-gradient(
+            135deg,
+            #c8171e,
+            #a31117
+        );
+
+    color:
+        #ffffff;
+
+    border-radius:
+        14px 5px 14px 14px;
+}
+
+
+/* ==========================================================
+   RESPUESTAS FORMATEADAS DE GEMINI
+========================================================== */
+
+.respuesta-formateada {
+
+    white-space:
+        normal;
+}
+
+
+.respuesta-formateada p {
+
+    margin:
+        0 0 11px;
+
+    line-height:
+        1.6;
+}
+
+
+.respuesta-formateada p:last-child {
+
+    margin-bottom:
+        0;
+}
+
+
+.respuesta-formateada ul,
+.respuesta-formateada ol {
+
+    margin:
+        9px 0 13px;
+
+    padding-left:
+        23px;
+}
+
+
+.respuesta-formateada li {
+
+    margin-bottom:
+        9px;
+
+    padding-left:
+        3px;
+
+    line-height:
+        1.58;
+}
+
+
+.respuesta-formateada li:last-child {
+
+    margin-bottom:
+        0;
+}
+
+
+.respuesta-formateada strong {
+
+    color:
+        #292e34;
+
+    font-weight:
+        700;
+}
+
+
+.respuesta-formateada em {
+
+    color:
+        #4d555d;
+
+    font-style:
+        italic;
+}
+
+
+.respuesta-formateada
+.respuesta-titulo {
+
+    margin:
+        13px 0 7px;
+
+    padding-left:
+        9px;
+
+    border-left:
+        3px solid var(--rojo);
+
+    color:
+        #292e34;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+.respuesta-formateada
+.respuesta-titulo:first-child {
+
+    margin-top:
+        0;
+}
+
+
+/* ==========================================================
+   OPCIONES
+========================================================== */
+
+.opciones-procedimientos {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    column-gap:
+        14px;
+
+    row-gap:
+        12px;
+
+    width:
+        calc(100% - 48px);
+
+    margin:
+        -7px 0 28px 48px;
+}
+
+
+.opcion-procedimiento {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+
+    width:
+        100%;
+
+    min-height:
+        70px;
+
+    padding:
+        14px 16px;
+
+    border:
+        1px solid #dfe3e8;
+
+    border-radius:
+        14px;
+
+    background:
+        #ffffff;
+
+    color:
+        #30353a;
+
+    font-family:
+        inherit;
+
+    text-align:
+        left;
+
+    cursor:
+        pointer;
+
+    transition:
+        0.18s ease;
+}
+
+
+.opcion-procedimiento:hover:not(:disabled) {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(215, 25, 32, 0.45);
+
+    background:
+        #fff8f8;
+}
+
+
+.opcion-procedimiento:disabled {
+
+    opacity:
+        0.50;
+
+    cursor:
+        default;
+}
+
+
+.opcion-codigo {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    min-width:
+        61px;
+
+    height:
+        36px;
+
+    padding:
+        0 9px;
+
+    border-radius:
+        9px;
+
+    background:
+        #fff0f1;
+
+    color:
+        #c5161d;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+}
+
+
+.opcion-titulo {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+    color:
+        #34393f;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.45;
+}
+
+
+/* ==========================================================
+   FORMULARIO
+========================================================== */
+
+.zona-consulta {
+
+    padding:
+        17px 0 23px;
+}
+
 
 .formulario {
-    display: flex;
-    gap: 10px;
-    padding: 18px;
-    border-top: 1px solid #e5e7eb;
-    background: #ffffff;
+
+    display:
+        flex;
+
+    align-items:
+        stretch;
+
+    gap:
+        10px;
 }
+
+
+.contenedor-input {
+
+    position:
+        relative;
+
+    flex:
+        1;
+}
+
+
+.icono-input {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        14px;
+
+    transform:
+        translateY(-50%);
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    border-radius:
+        8px;
+
+    background:
+        #f0f2f4;
+
+    color:
+        #737a82;
+
+    font-weight:
+        800;
+}
+
 
 #pregunta {
-    flex: 1;
-    padding: 12px 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    font-size: 15px;
-    outline: none;
+
+    width:
+        100%;
+
+    height:
+        50px;
+
+    padding:
+        0 15px 0 48px;
+
+    border:
+        1px solid #ccd2d8;
+
+    border-radius:
+        13px;
+
+    outline:
+        none;
+
+    background:
+        #ffffff;
+
+    font-size:
+        13px;
 }
+
 
 #pregunta:focus {
-    border-color: #64748b;
+
+    border-color:
+        rgba(215, 25, 32, 0.65);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(215, 25, 32, 0.07);
 }
 
 
-/* =========================================================
-   BOTÓN
-========================================================= */
+/* ==========================================================
+   ENVIAR
+========================================================== */
 
 #botonConsultar {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    background: #1f2937;
-    color: #ffffff;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.2s;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    min-width:
+        116px;
+
+    border:
+        none;
+
+    border-radius:
+        13px;
+
+    padding:
+        0 20px;
+
+    color:
+        #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d71920,
+            #aa1016
+        );
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
 }
 
-#botonConsultar:hover {
-    opacity: 0.9;
+
+#botonConsultar svg {
+
+    width:
+        18px;
+
+    height:
+        18px;
+
+    fill:
+        #ffffff;
 }
+
 
 #botonConsultar:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+
+    background:
+        #c5c8cc;
+
+    cursor:
+        default;
 }
 
 
-/* =========================================================
-   RESPUESTA DE PRUEBA
-========================================================= */
+/* ==========================================================
+   PIE
+========================================================== */
 
-#respuesta {
-    white-space: pre-wrap;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.5;
-    margin: 20px;
-    padding: 16px;
-    border-radius: 10px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+.pie {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        13px 20px;
+
+    border-top:
+        1px solid #eceef1;
+
+    background:
+        #fafbfc;
+
+    color:
+        #969ba1;
+
+    font-size:
+        9px;
 }
 
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* ==========================================================
+   TABLET
+========================================================== */
 
-@media (max-width: 700px) {
+@media (
+    max-width: 850px
+) {
+
+    .botones-rapidos {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .opciones-procedimientos {
+
+        grid-template-columns:
+            1fr;
+
+        width:
+            calc(100% - 48px);
+
+        margin-left:
+            48px;
+    }
+
+}
+
+
+/* ==========================================================
+   MÓVIL
+========================================================== */
+
+@media (
+    max-width: 650px
+) {
 
     body {
-        padding: 8px;
-        align-items: flex-start;
+
+        padding:
+            0;
     }
 
-    .contenedor {
-        border-radius: 10px;
+
+    .app {
+
+        min-height:
+            100vh;
+
+        border-radius:
+            0;
     }
 
-    .encabezado h1 {
-        font-size: 22px;
+
+    .cabecera {
+
+        padding:
+            23px 20px 16px;
     }
+
+
+    .cabecera-contenido {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .identidad-asistente h1 {
+
+        font-size:
+            25px;
+    }
+
+
+    .marca-operador {
+
+        position:
+            absolute;
+
+        top:
+            20px;
+
+        right:
+            20px;
+
+        padding:
+            6px;
+    }
+
+
+    .marca-texto {
+
+        display:
+            none;
+    }
+
+
+    .aviso-vigencia {
+
+        margin:
+            15px 16px 0;
+    }
+
+
+    .zona-principal {
+
+        padding:
+            20px 16px 0;
+    }
+
+
+    .consultas-encabezado {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            5px;
+    }
+
+
+    .texto-variable {
+
+        display:
+            none;
+    }
+
+
+    .botones-rapidos {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .chat {
-        min-height: 350px;
-        max-height: 60vh;
-        padding: 14px;
+
+        min-height:
+            400px;
+
+        padding:
+            19px 14px;
     }
 
-    .burbuja {
-        max-width: 90%;
-        font-size: 14px;
+
+    .contenido-mensaje {
+
+        max-width:
+            82%;
     }
+
+
+    .opciones-procedimientos {
+
+        grid-template-columns:
+            1fr;
+
+        width:
+            100%;
+
+        margin:
+            -4px 0 24px;
+
+        gap:
+            10px;
+    }
+
+
+    .opcion-procedimiento {
+
+        min-height:
+            62px;
+
+        padding:
+            12px 13px;
+    }
+
 
     .formulario {
-        flex-direction: column;
+
+        gap:
+            7px;
     }
 
+
     #botonConsultar {
-        width: 100%;
+
+        min-width:
+            52px;
+
+        padding:
+            0 15px;
     }
+
+
+    #botonConsultar span {
+
+        display:
+            none;
+    }
+
+}
+
+
+/* ==========================================================
+   MÓVIL PEQUEÑO
+========================================================== */
+
+@media (
+    max-width: 420px
+) {
+
+    .botones-rapidos {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .barra-estado
+    .estado-secundario {
+
+        display:
+            none;
+    }
+
 }

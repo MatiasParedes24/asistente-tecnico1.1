@@ -12,8 +12,15 @@
     >
 
     <title>
-        Asistente Técnico
+        Asistente Operativo
     </title>
+
+
+    <link
+        rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎧%3C/text%3E%3C/svg%3E"
+    >
+
 
     <link
         rel="stylesheet"
@@ -25,65 +32,507 @@
 
 <body>
 
-    <main
-        class="contenedor"
-    >
+
+    <main class="app">
 
 
         <!-- ==================================================
-             ENCABEZADO
+             CABECERA
         =================================================== -->
 
-        <header
-            class="encabezado"
-        >
+        <header class="cabecera">
 
-            <h1>
-                Asistente Técnico
-            </h1>
-
-            <p>
-                Consulta procedimientos operativos,
-                validaciones, reprogramaciones,
-                rechazos y códigos de mantenimiento.
-            </p>
 
             <div
-                id="estado"
-                class="estado"
-            >
-                Cargando base de conocimiento...
+                class="cabecera-decoracion decoracion-1"
+            ></div>
+
+
+            <div
+                class="cabecera-decoracion decoracion-2"
+            ></div>
+
+
+            <div class="cabecera-contenido">
+
+
+                <!-- ==========================================
+                     IDENTIDAD
+                =========================================== -->
+
+                <div class="identidad-asistente">
+
+
+                    <div class="icono-principal">
+
+                        <svg
+                            viewBox="0 0 64 64"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="32"
+                                cy="24"
+                                r="10"
+                                class="svg-relleno"
+                            />
+
+
+                            <path
+                                d="M17 26 C17 8 47 8 47 26"
+                                class="svg-linea"
+                            />
+
+
+                            <path
+                                d="M17 25 L17 36 C17 40 20 42 24 42"
+                                class="svg-linea"
+                            />
+
+
+                            <rect
+                                x="12"
+                                y="25"
+                                width="7"
+                                height="14"
+                                rx="3"
+                                class="svg-relleno"
+                            />
+
+
+                            <rect
+                                x="45"
+                                y="25"
+                                width="7"
+                                height="14"
+                                rx="3"
+                                class="svg-relleno"
+                            />
+
+
+                            <path
+                                d="M24 49 C28 45 36 45 40 49 C43 52 44 56 44 59 H20 C20 56 21 52 24 49"
+                                class="svg-relleno"
+                            />
+
+
+                            <circle
+                                cx="25"
+                                cy="42"
+                                r="2.2"
+                                class="svg-detalle"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <div>
+
+                        <span class="etiqueta-producto">
+                            Asistente de soporte
+                        </span>
+
+
+                        <h1>
+                            Asistente Operativo
+                        </h1>
+
+
+                        <p>
+                            Consulta rápida de procedimientos
+                            técnicos y operativos
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     MARCA
+                =========================================== -->
+
+                <div class="marca-operador">
+
+
+                    <div class="marca-icono">
+
+                        <svg
+                            viewBox="0 0 64 64"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="32"
+                                cy="23"
+                                r="9"
+                                class="marca-cabeza"
+                            />
+
+
+                            <path
+                                d="M16 26 C16 9 48 9 48 26"
+                                class="marca-headset"
+                            />
+
+
+                            <rect
+                                x="11"
+                                y="25"
+                                width="8"
+                                height="15"
+                                rx="4"
+                                class="marca-cabeza"
+                            />
+
+
+                            <rect
+                                x="45"
+                                y="25"
+                                width="8"
+                                height="15"
+                                rx="4"
+                                class="marca-cabeza"
+                            />
+
+
+                            <path
+                                d="M19 36 C19 43 24 46 31 46 H37"
+                                class="marca-headset"
+                            />
+
+
+                            <circle
+                                cx="40"
+                                cy="46"
+                                r="3"
+                                class="marca-cabeza"
+                            />
+
+
+                            <path
+                                d="M20 59 C21 49 43 49 44 59"
+                                class="marca-cabeza"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="marca-texto">
+
+                        <strong>
+                            Hitss
+                        </strong>
+
+
+                        <span>
+                            Claro Perú
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================================
+                 ESTADO
+            =============================================== -->
+
+            <div class="barra-estado">
+
+
+                <div
+                    id="estadoSistema"
+                    class="estado-sistema cargando"
+                >
+
+                    <span class="punto-estado"></span>
+
+
+                    <span id="textoEstado">
+                        Iniciando sistema...
+                    </span>
+
+                </div>
+
+
+                <div class="estado-secundario">
+
+                    <span class="estado-icono">
+                        ◉
+                    </span>
+
+                    Base de conocimiento conectada
+
+                </div>
+
             </div>
 
         </header>
 
 
         <!-- ==================================================
-             CHAT
+             AVISO DE VIGENCIA
         =================================================== -->
 
         <section
-            id="chat"
-            class="chat"
+            id="avisoVigencia"
+            class="aviso-vigencia"
         >
 
-            <div
-                class="mensaje asistente"
+
+            <div class="aviso-icono">
+
+                <span>
+                    !
+                </span>
+
+            </div>
+
+
+            <div class="aviso-contenido">
+
+
+                <div class="aviso-titulo">
+
+                    <strong>
+                        Vigencia de la información
+                    </strong>
+
+
+                    <span class="aviso-badge">
+                        Importante
+                    </span>
+
+                </div>
+
+
+                <p id="textoActualizacion">
+                    Consultando fecha de actualización...
+                </p>
+
+
+                <small>
+                    Los procedimientos pueden haber sido
+                    modificados después de esta fecha.
+                    Si encuentras diferencias con una
+                    indicación vigente, valida el caso
+                    con tu supervisor a cargo.
+                </small>
+
+            </div>
+
+
+            <button
+                id="cerrarAviso"
+                class="cerrar-aviso"
+                type="button"
+                aria-label="Cerrar aviso"
             >
+                ×
+            </button>
+
+        </section>
+
+
+        <!-- ==================================================
+             ZONA PRINCIPAL
+        =================================================== -->
+
+        <section class="zona-principal">
+
+
+            <!-- ==============================================
+                 CONSULTAS RÁPIDAS
+            =============================================== -->
+
+            <div class="consultas-rapidas">
+
+
+                <div class="consultas-encabezado">
+
+
+                    <div>
+
+                        <span class="mini-etiqueta">
+                            Sugerencias
+                        </span>
+
+
+                        <h2>
+                            ¿Qué necesitas consultar?
+                        </h2>
+
+                    </div>
+
+
+                    <span class="texto-variable">
+                        Las sugerencias cambian al ingresar
+                    </span>
+
+                </div>
+
 
                 <div
-                    class="burbuja"
+                    id="botonesRapidos"
+                    class="botones-rapidos"
                 >
-Hola. Puedes realizar una consulta operativa
-o ingresar directamente un código de mantenimiento.
+                </div>
 
-Ejemplos:
+            </div>
 
-• ¿Cómo valido niveles FTTH?
-• ¿Cómo hago un fuera de TOA?
-• ¿Qué hago si el técnico llegó tarde?
-• AB03
-• PC18
+
+            <!-- ==============================================
+                 CHAT
+            =============================================== -->
+
+            <section
+                id="chat"
+                class="chat"
+            >
+
+
+                <div class="mensaje asistente">
+
+
+                    <div
+                        class="avatar-mensaje asistente-avatar"
+                    >
+
+                        <svg
+                            viewBox="0 0 64 64"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="32"
+                                cy="24"
+                                r="9"
+                            ></circle>
+
+
+                            <path
+                                d="M17 27 C17 10 47 10 47 27"
+                            ></path>
+
+
+                            <rect
+                                x="12"
+                                y="26"
+                                width="7"
+                                height="13"
+                                rx="3"
+                            ></rect>
+
+
+                            <rect
+                                x="45"
+                                y="26"
+                                width="7"
+                                height="13"
+                                rx="3"
+                            ></rect>
+
+
+                            <path
+                                d="M20 58 C22 47 42 47 44 58"
+                            ></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="contenido-mensaje">
+
+
+                        <div class="cabecera-mensaje">
+
+
+                            <span class="nombre-mensaje">
+                                Asistente Operativo
+                            </span>
+
+
+                            <span class="badge-mensaje">
+                                En línea
+                            </span>
+
+                        </div>
+
+
+                        <div class="burbuja">
+Hola. ¿En qué proceso necesitas apoyo?
+
+Puedes describir tu caso con tus propias palabras o ingresar directamente un código de mantenimiento.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==============================================
+                 FORMULARIO
+            =============================================== -->
+
+            <div class="zona-consulta">
+
+
+                <div class="formulario">
+
+
+                    <div class="contenedor-input">
+
+
+                        <span class="icono-input">
+                            ?
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="pregunta"
+                            placeholder="Describe tu consulta operativa..."
+                            autocomplete="off"
+                            disabled
+                        >
+
+                    </div>
+
+
+                    <button
+                        id="botonConsultar"
+                        type="button"
+                        disabled
+                    >
+
+                        <span>
+                            Enviar
+                        </span>
+
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M3 12L21 3L15 21L11 13L3 12Z"
+                            />
+
+                        </svg>
+
+                    </button>
+
                 </div>
 
             </div>
@@ -92,30 +541,27 @@ Ejemplos:
 
 
         <!-- ==================================================
-             FORMULARIO
+             PIE
         =================================================== -->
 
-        <div
-            class="formulario"
-        >
+        <footer class="pie">
 
-            <input
-                type="text"
-                id="pregunta"
-                placeholder="Escribe tu consulta..."
-                autocomplete="off"
-                disabled
-            >
+            <span>
+                Asistente Operativo
+            </span>
 
-            <button
-                id="botonConsultar"
-                type="button"
-                disabled
-            >
-                Enviar
-            </button>
 
-        </div>
+            <span class="separador-pie">
+                •
+            </span>
+
+
+            <span>
+                Hitss · Claro Perú
+            </span>
+
+        </footer>
+
 
     </main>
 
@@ -144,6 +590,17 @@ Ejemplos:
 
     <script>
 
+        "use strict";
+
+
+        // =====================================================
+        // RESPUESTA SEGURA
+        // =====================================================
+
+        const RESPUESTA_SEGURA =
+            "No existe información confirmada para esta consulta en la base de conocimiento. Consulta con tu supervisor a cargo.";
+
+
         // =====================================================
         // ELEMENTOS
         // =====================================================
@@ -153,33 +610,547 @@ Ejemplos:
                 "chat"
             );
 
-        const estado =
-            document.getElementById(
-                "estado"
-            );
 
         const pregunta =
             document.getElementById(
                 "pregunta"
             );
 
-        const boton =
+
+        const botonConsultar =
             document.getElementById(
                 "botonConsultar"
             );
 
 
+        const estadoSistema =
+            document.getElementById(
+                "estadoSistema"
+            );
+
+
+        const textoEstado =
+            document.getElementById(
+                "textoEstado"
+            );
+
+
+        const textoActualizacion =
+            document.getElementById(
+                "textoActualizacion"
+            );
+
+
+        const avisoVigencia =
+            document.getElementById(
+                "avisoVigencia"
+            );
+
+
+        const cerrarAviso =
+            document.getElementById(
+                "cerrarAviso"
+            );
+
+
+        const contenedorBotonesRapidos =
+            document.getElementById(
+                "botonesRapidos"
+            );
+
+
         // =====================================================
-        // ESCAPAR HTML
+        // CONSULTAS RÁPIDAS
         // =====================================================
 
-        function escaparHTML(
+        const CONSULTAS_RAPIDAS = [
+
+            {
+                icono: "FT",
+                titulo: "Niveles FTTH",
+                descripcion: "Validación de potencia óptica",
+                consulta: "como valido niveles FTTH"
+            },
+
+            {
+                icono: "HF",
+                titulo: "Niveles HFC",
+                descripcion: "Validación de niveles de señal",
+                consulta: "como valido niveles HFC"
+            },
+
+            {
+                icono: "TO",
+                titulo: "Fuera de TOA",
+                descripcion: "Gestión de actividad fuera de TOA",
+                consulta: "como hago un fuera de TOA"
+            },
+
+            {
+                icono: "RP",
+                titulo: "Reprogramación",
+                descripcion: "Gestión de reprogramación",
+                consulta: "como reprogramo una SOT"
+            },
+
+            {
+                icono: "MT",
+                titulo: "Mantenimiento",
+                descripcion: "Validación de mantenimiento",
+                consulta: "como valido mantenimiento"
+            },
+
+            {
+                icono: "IN",
+                titulo: "Instalación",
+                descripcion: "Validación de instalación",
+                consulta: "como valido una instalacion"
+            },
+
+            {
+                icono: "RJ",
+                titulo: "Rechazo",
+                descripcion: "Gestión de rechazo",
+                consulta: "como rechazo una SOT"
+            },
+
+            {
+                icono: "LL",
+                titulo: "Antes de llamar",
+                descripcion: "Validaciones previas",
+                consulta: "que debo revisar antes de llamar al cliente"
+            },
+
+            {
+                icono: "SC",
+                titulo: "Sin contacto",
+                descripcion: "Cliente no responde",
+                consulta: "que hago si el cliente no responde"
+            },
+
+            {
+                icono: "TV",
+                titulo: "IPTV",
+                descripcion: "Validación IPTV",
+                consulta: "como valido IPTV"
+            },
+
+            {
+                icono: "SP",
+                titulo: "Speedtest",
+                descripcion: "Evidencia de velocidad",
+                consulta: "que hago si no me envia test de velocidad"
+            },
+
+            {
+                icono: "AB",
+                titulo: "Código AB03",
+                descripcion: "Código de mantenimiento",
+                consulta: "AB03"
+            },
+
+            {
+                icono: "PC",
+                titulo: "Código PC18",
+                descripcion: "Código de mantenimiento",
+                consulta: "PC18"
+            },
+
+            {
+                icono: "FI",
+                titulo: "Código FI09",
+                descripcion: "Código de mantenimiento",
+                consulta: "FI09"
+            }
+
+        ];
+
+
+        // =====================================================
+        // MEZCLAR ARRAY
+        // =====================================================
+
+        function mezclarArray(
+            elementos
+        ) {
+
+            const copia =
+                [...elementos];
+
+
+            for (
+                let i =
+                    copia.length - 1;
+
+                i > 0;
+
+                i--
+            ) {
+
+                const j =
+                    Math.floor(
+                        Math.random() *
+                        (
+                            i + 1
+                        )
+                    );
+
+
+                [
+                    copia[i],
+                    copia[j]
+                ] =
+                [
+                    copia[j],
+                    copia[i]
+                ];
+            }
+
+
+            return copia;
+        }
+
+
+        // =====================================================
+        // GENERAR CONSULTAS RÁPIDAS
+        // =====================================================
+
+        function generarConsultasRapidas() {
+
+            contenedorBotonesRapidos.innerHTML =
+                "";
+
+
+            const seleccion =
+                mezclarArray(
+                    CONSULTAS_RAPIDAS
+                )
+                .slice(
+                    0,
+                    4
+                );
+
+
+            seleccion.forEach(
+                item => {
+
+
+                    const boton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    boton.type =
+                        "button";
+
+
+                    boton.className =
+                        "boton-rapido";
+
+
+                    const icono =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    icono.className =
+                        "boton-rapido-icono";
+
+
+                    icono.textContent =
+                        item.icono;
+
+
+                    const contenido =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    contenido.className =
+                        "boton-rapido-contenido";
+
+
+                    const titulo =
+                        document.createElement(
+                            "strong"
+                        );
+
+
+                    titulo.textContent =
+                        item.titulo;
+
+
+                    const descripcion =
+                        document.createElement(
+                            "small"
+                        );
+
+
+                    descripcion.textContent =
+                        item.descripcion;
+
+
+                    contenido.appendChild(
+                        titulo
+                    );
+
+
+                    contenido.appendChild(
+                        descripcion
+                    );
+
+
+                    boton.appendChild(
+                        icono
+                    );
+
+
+                    boton.appendChild(
+                        contenido
+                    );
+
+
+                    boton.addEventListener(
+                        "click",
+                        () => {
+
+                            procesarConsulta(
+                                item.consulta
+                            );
+                        }
+                    );
+
+
+                    contenedorBotonesRapidos.appendChild(
+                        boton
+                    );
+                }
+            );
+        }
+
+
+        // =====================================================
+        // FORMATEAR FECHA
+        // =====================================================
+
+        function formatearFecha(
+            fecha
+        ) {
+
+            if (
+                !fecha
+            ) {
+
+                return "";
+            }
+
+
+            const partes =
+                String(
+                    fecha
+                )
+                .split(
+                    "-"
+                );
+
+
+            if (
+                partes.length !==
+                3
+            ) {
+
+                return fecha;
+            }
+
+
+            return (
+                `${partes[2]}/` +
+                `${partes[1]}/` +
+                `${partes[0]}`
+            );
+        }
+
+
+        // =====================================================
+        // CARGAR VIGENCIA
+        // =====================================================
+
+        async function cargarVigenciaBase() {
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        "data/base_conocimiento.json",
+                        {
+                            cache:
+                                "no-store"
+                        }
+                    );
+
+
+                if (
+                    !respuesta.ok
+                ) {
+
+                    throw new Error(
+                        "No se pudo consultar metadata."
+                    );
+                }
+
+
+                const base =
+                    await respuesta.json();
+
+
+                const metadata =
+                    base.metadata ||
+                    {};
+
+
+                const fecha =
+                    formatearFecha(
+                        metadata
+                            .fecha_actualizacion
+                    );
+
+
+                const version =
+                    metadata.version ||
+                    "";
+
+
+                let texto =
+                    "Base de conocimiento";
+
+
+                if (
+                    fecha
+                ) {
+
+                    texto +=
+                        ` actualizada por última vez el ${fecha}`;
+                }
+
+
+                if (
+                    version
+                ) {
+
+                    texto +=
+                        ` · Versión ${version}`;
+                }
+
+
+                texto +=
+                    ".";
+
+
+                textoActualizacion.textContent =
+                    texto;
+
+
+            } catch (
+                error
+            ) {
+
+                console.warn(
+                    "No se pudo obtener vigencia:",
+                    error
+                );
+
+
+                textoActualizacion.textContent =
+                    "No fue posible determinar la fecha de actualización de la base.";
+            }
+        }
+
+
+        // =====================================================
+        // OCULTAR AVISO
+        // =====================================================
+
+        function ocultarAvisoVigencia() {
+
+            if (
+                !avisoVigencia
+            ) {
+
+                return;
+            }
+
+
+            if (
+                avisoVigencia
+                    .classList
+                    .contains(
+                        "oculto"
+                    )
+            ) {
+
+                return;
+            }
+
+
+            avisoVigencia
+                .classList
+                .add(
+                    "ocultando"
+                );
+
+
+            setTimeout(
+                () => {
+
+                    avisoVigencia
+                        .classList
+                        .add(
+                            "oculto"
+                        );
+
+                },
+                450
+            );
+        }
+
+
+        cerrarAviso.addEventListener(
+            "click",
+            ocultarAvisoVigencia
+        );
+
+
+        setTimeout(
+            ocultarAvisoVigencia,
+            60000
+        );
+
+
+        // =====================================================
+        // FORMATEAR RESPUESTAS IA
+        //
+        // Convierte Markdown simple:
+        //
+        // **texto**  -> negrita
+        // *texto*    -> cursiva
+        // * item     -> lista
+        // - item     -> lista
+        // 1. item    -> lista numerada
+        //
+        // Antes se escapa HTML para mantener seguridad.
+        // =====================================================
+
+        function formatearRespuestaIA(
             texto
         ) {
 
-            return String(
-                texto || ""
-            )
+            let seguro =
+                String(
+                    texto || ""
+                )
                 .replaceAll(
                     "&",
                     "&amp;"
@@ -200,24 +1171,324 @@ Ejemplos:
                     "'",
                     "&#039;"
                 );
+
+
+            // -------------------------------------------------
+            // NEGRITA
+            // -------------------------------------------------
+
+            seguro =
+                seguro.replace(
+                    /\*\*(.+?)\*\*/g,
+                    "<strong>$1</strong>"
+                );
+
+
+            // -------------------------------------------------
+            // CURSIVA
+            // -------------------------------------------------
+
+            seguro =
+                seguro.replace(
+                    /\*([^*\n]+?)\*/g,
+                    "<em>$1</em>"
+                );
+
+
+            const lineas =
+                seguro.split(
+                    "\n"
+                );
+
+
+            let html =
+                "";
+
+
+            let tipoLista =
+                null;
+
+
+            // =================================================
+            // CERRAR LISTA ABIERTA
+            // =================================================
+
+            function cerrarLista() {
+
+                if (
+                    tipoLista ===
+                    "ul"
+                ) {
+
+                    html +=
+                        "</ul>";
+                }
+
+
+                if (
+                    tipoLista ===
+                    "ol"
+                ) {
+
+                    html +=
+                        "</ol>";
+                }
+
+
+                tipoLista =
+                    null;
+            }
+
+
+            // =================================================
+            // RECORRER LÍNEAS
+            // =================================================
+
+            for (
+                const lineaOriginal
+                of lineas
+            ) {
+
+                const linea =
+                    lineaOriginal.trim();
+
+
+                // ---------------------------------------------
+                // VACÍA
+                // ---------------------------------------------
+
+                if (
+                    !linea
+                ) {
+
+                    cerrarLista();
+
+
+                    continue;
+                }
+
+
+                // ---------------------------------------------
+                // TÍTULO MARKDOWN
+                // ### Título
+                // ---------------------------------------------
+
+                if (
+                    /^#{1,3}\s+/.test(
+                        linea
+                    )
+                ) {
+
+                    cerrarLista();
+
+
+                    const titulo =
+                        linea.replace(
+                            /^#{1,3}\s+/,
+                            ""
+                        );
+
+
+                    html +=
+                        `<div class="respuesta-titulo">${titulo}</div>`;
+
+
+                    continue;
+                }
+
+
+                // ---------------------------------------------
+                // LISTA NORMAL
+                // * texto
+                // - texto
+                // • texto
+                // ---------------------------------------------
+
+                if (
+                    /^(\*|-|•)\s+/.test(
+                        linea
+                    )
+                ) {
+
+                    if (
+                        tipoLista !==
+                        "ul"
+                    ) {
+
+                        cerrarLista();
+
+
+                        html +=
+                            "<ul>";
+
+
+                        tipoLista =
+                            "ul";
+                    }
+
+
+                    const contenido =
+                        linea.replace(
+                            /^(\*|-|•)\s+/,
+                            ""
+                        );
+
+
+                    html +=
+                        `<li>${contenido}</li>`;
+
+
+                    continue;
+                }
+
+
+                // ---------------------------------------------
+                // LISTA NUMERADA
+                // 1. texto
+                // 2. texto
+                // ---------------------------------------------
+
+                if (
+                    /^\d+\.\s+/.test(
+                        linea
+                    )
+                ) {
+
+                    if (
+                        tipoLista !==
+                        "ol"
+                    ) {
+
+                        cerrarLista();
+
+
+                        html +=
+                            "<ol>";
+
+
+                        tipoLista =
+                            "ol";
+                    }
+
+
+                    const contenido =
+                        linea.replace(
+                            /^\d+\.\s+/,
+                            ""
+                        );
+
+
+                    html +=
+                        `<li>${contenido}</li>`;
+
+
+                    continue;
+                }
+
+
+                // ---------------------------------------------
+                // TEXTO NORMAL
+                // ---------------------------------------------
+
+                cerrarLista();
+
+
+                html +=
+                    `<p>${linea}</p>`;
+            }
+
+
+            cerrarLista();
+
+
+            return html;
         }
 
 
         // =====================================================
-        // FORMATEAR TEXTO
+        // AVATAR
         // =====================================================
 
-        function formatearTexto(
-            texto
+        function crearAvatar(
+            tipo
         ) {
 
-            return escaparHTML(
-                texto
-            )
-                .replaceAll(
-                    "\n",
-                    "<br>"
+            const avatar =
+                document.createElement(
+                    "div"
                 );
+
+
+            avatar.classList.add(
+                "avatar-mensaje"
+            );
+
+
+            if (
+                tipo ===
+                "usuario"
+            ) {
+
+                avatar.classList.add(
+                    "usuario-avatar"
+                );
+
+
+                avatar.textContent =
+                    "A";
+
+
+                return avatar;
+            }
+
+
+            avatar.classList.add(
+                "asistente-avatar"
+            );
+
+
+            avatar.innerHTML = `
+
+                <svg
+                    viewBox="0 0 64 64"
+                    aria-hidden="true"
+                >
+
+                    <circle
+                        cx="32"
+                        cy="24"
+                        r="9"
+                    ></circle>
+
+                    <path
+                        d="M17 27 C17 10 47 10 47 27"
+                    ></path>
+
+                    <rect
+                        x="12"
+                        y="26"
+                        width="7"
+                        height="13"
+                        rx="3"
+                    ></rect>
+
+                    <rect
+                        x="45"
+                        y="26"
+                        width="7"
+                        height="13"
+                        rx="3"
+                    ></rect>
+
+                    <path
+                        d="M20 58 C22 47 42 47 44 58"
+                    ></path>
+
+                </svg>
+            `;
+
+
+            return avatar;
         }
 
 
@@ -227,18 +1498,98 @@ Ejemplos:
 
         function agregarMensaje(
             texto,
-            tipo
+            tipo,
+            etiqueta = ""
         ) {
 
-            const contenedor =
+            const mensaje =
                 document.createElement(
                     "div"
                 );
 
-            contenedor.classList.add(
+
+            mensaje.classList.add(
                 "mensaje",
                 tipo
             );
+
+
+            const avatar =
+                crearAvatar(
+                    tipo
+                );
+
+
+            const contenido =
+                document.createElement(
+                    "div"
+                );
+
+
+            contenido.classList.add(
+                "contenido-mensaje"
+            );
+
+
+            const cabecera =
+                document.createElement(
+                    "div"
+                );
+
+
+            cabecera.classList.add(
+                "cabecera-mensaje"
+            );
+
+
+            const nombre =
+                document.createElement(
+                    "span"
+                );
+
+
+            nombre.classList.add(
+                "nombre-mensaje"
+            );
+
+
+            nombre.textContent =
+                tipo ===
+                "usuario"
+                    ?
+                    "Asesor"
+                    :
+                    "Asistente Operativo";
+
+
+            cabecera.appendChild(
+                nombre
+            );
+
+
+            if (
+                etiqueta
+            ) {
+
+                const badge =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                badge.classList.add(
+                    "badge-mensaje"
+                );
+
+
+                badge.textContent =
+                    etiqueta;
+
+
+                cabecera.appendChild(
+                    badge
+                );
+            }
 
 
             const burbuja =
@@ -246,19 +1597,320 @@ Ejemplos:
                     "div"
                 );
 
+
             burbuja.classList.add(
                 "burbuja"
             );
 
-            burbuja.innerHTML =
-                formatearTexto(
+
+            // Mensaje inicial seguro.
+            burbuja.textContent =
+                texto;
+
+
+            contenido.appendChild(
+                cabecera
+            );
+
+
+            contenido.appendChild(
+                burbuja
+            );
+
+
+            if (
+                tipo ===
+                "usuario"
+            ) {
+
+                mensaje.appendChild(
+                    contenido
+                );
+
+
+                mensaje.appendChild(
+                    avatar
+                );
+
+            } else {
+
+                mensaje.appendChild(
+                    avatar
+                );
+
+
+                mensaje.appendChild(
+                    contenido
+                );
+            }
+
+
+            chat.appendChild(
+                mensaje
+            );
+
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+
+            return {
+
+                mensaje:
+                    mensaje,
+
+                contenido:
+                    contenido,
+
+                cabecera:
+                    cabecera,
+
+                burbuja:
+                    burbuja
+            };
+        }
+
+
+        // =====================================================
+        // ACTUALIZAR MENSAJE
+        //
+        // AQUÍ SE APLICA EL FORMATO VISUAL
+        // =====================================================
+
+        function actualizarMensaje(
+            elementos,
+            texto,
+            etiqueta = ""
+        ) {
+
+            elementos
+                .burbuja
+                .innerHTML =
+                formatearRespuestaIA(
                     texto
                 );
 
 
-            contenedor.appendChild(
-                burbuja
+            elementos
+                .burbuja
+                .classList
+                .add(
+                    "respuesta-formateada"
+                );
+
+
+            let badge =
+                elementos
+                    .cabecera
+                    .querySelector(
+                        ".badge-mensaje"
+                    );
+
+
+            if (
+                etiqueta
+            ) {
+
+                if (
+                    !badge
+                ) {
+
+                    badge =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    badge.classList.add(
+                        "badge-mensaje"
+                    );
+
+
+                    elementos
+                        .cabecera
+                        .appendChild(
+                            badge
+                        );
+                }
+
+
+                badge.textContent =
+                    etiqueta;
+            }
+
+
+            chat.scrollTop =
+                chat.scrollHeight;
+        }
+
+
+        // =====================================================
+        // ETIQUETA DE FUENTES
+        // =====================================================
+
+        function construirEtiquetaFuentes(
+            resultado
+        ) {
+
+            const fuentes =
+                resultado
+                    ?.fuentes_usadas ||
+                [];
+
+
+            if (
+                fuentes.length ===
+                0
+            ) {
+
+                return "Base de conocimiento";
+            }
+
+
+            const ids =
+                fuentes
+                    .map(
+                        fuente =>
+                            fuente.id ||
+                            ""
+                    )
+                    .filter(
+                        Boolean
+                    );
+
+
+            if (
+                ids.length ===
+                0
+            ) {
+
+                return "Base de conocimiento";
+            }
+
+
+            return (
+                "Base · " +
+                ids.join(
+                    ", "
+                )
             );
+        }
+
+
+        // =====================================================
+        // MOSTRAR OPCIONES
+        // =====================================================
+
+        function mostrarOpciones(
+            opciones,
+            preguntaOriginal
+        ) {
+
+            const contenedor =
+                document.createElement(
+                    "div"
+                );
+
+
+            contenedor.className =
+                "opciones-procedimientos";
+
+
+            opciones.forEach(
+                opcion => {
+
+
+                    const botonOpcion =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    botonOpcion.type =
+                        "button";
+
+
+                    botonOpcion.className =
+                        "opcion-procedimiento";
+
+
+                    const codigo =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    codigo.className =
+                        "opcion-codigo";
+
+
+                    codigo.textContent =
+                        opcion.id ||
+                        "OPCIÓN";
+
+
+                    const titulo =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    titulo.className =
+                        "opcion-titulo";
+
+
+                    titulo.textContent =
+                        opcion.titulo ||
+                        opcion.descripcion ||
+                        opcion.id ||
+                        "Consultar opción";
+
+
+                    botonOpcion.appendChild(
+                        codigo
+                    );
+
+
+                    botonOpcion.appendChild(
+                        titulo
+                    );
+
+
+                    botonOpcion.addEventListener(
+                        "click",
+                        async () => {
+
+
+                            const botones =
+                                contenedor
+                                    .querySelectorAll(
+                                        ".opcion-procedimiento"
+                                    );
+
+
+                            botones.forEach(
+                                boton => {
+
+                                    boton.disabled =
+                                        true;
+                                }
+                            );
+
+
+                            await procesarSeleccion(
+                                preguntaOriginal,
+                                opcion
+                            );
+                        }
+                    );
+
+
+                    contenedor.appendChild(
+                        botonOpcion
+                    );
+                }
+            );
+
 
             chat.appendChild(
                 contenedor
@@ -267,33 +1919,11 @@ Ejemplos:
 
             chat.scrollTop =
                 chat.scrollHeight;
-
-
-            return burbuja;
         }
 
 
         // =====================================================
-        // ACTUALIZAR MENSAJE
-        // =====================================================
-
-        function actualizarMensaje(
-            burbuja,
-            texto
-        ) {
-
-            burbuja.innerHTML =
-                formatearTexto(
-                    texto
-                );
-
-            chat.scrollTop =
-                chat.scrollHeight;
-        }
-
-
-        // =====================================================
-        // HABILITAR / DESHABILITAR
+        // ESTADO FORMULARIO
         // =====================================================
 
         function cambiarEstadoFormulario(
@@ -303,8 +1933,272 @@ Ejemplos:
             pregunta.disabled =
                 !habilitado;
 
-            boton.disabled =
+
+            botonConsultar.disabled =
                 !habilitado;
+
+
+            document
+                .querySelectorAll(
+                    ".boton-rapido"
+                )
+                .forEach(
+                    boton => {
+
+                        boton.disabled =
+                            !habilitado;
+                    }
+                );
+        }
+
+
+        // =====================================================
+        // FINALIZAR
+        // =====================================================
+
+        function finalizarConsulta() {
+
+            cambiarEstadoFormulario(
+                true
+            );
+
+
+            pregunta.focus();
+        }
+
+
+        // =====================================================
+        // MOTOR LOCAL DE RESPALDO
+        // =====================================================
+
+        function consultarRespaldoLocal(
+            texto
+        ) {
+
+            try {
+
+                if (
+                    !window.AsistenteMotor
+                ) {
+
+                    return null;
+                }
+
+
+                const resultado =
+                    window
+                        .AsistenteMotor
+                        .consultar(
+                            texto
+                        );
+
+
+                console.log(
+                    "Resultado local de respaldo:",
+                    resultado
+                );
+
+
+                return resultado;
+
+
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Error motor local:",
+                    error
+                );
+
+
+                return null;
+            }
+        }
+
+
+        // =====================================================
+        // MOSTRAR RESPALDO
+        // =====================================================
+
+        function mostrarRespaldoLocal(
+            texto,
+            mensajeCarga = null
+        ) {
+
+            const resultadoLocal =
+                consultarRespaldoLocal(
+                    texto
+                );
+
+
+            let respuesta =
+                RESPUESTA_SEGURA;
+
+
+            let etiqueta =
+                "Base de conocimiento";
+
+
+            if (
+                resultadoLocal
+                &&
+                resultadoLocal.tipo ===
+                "procedimiento"
+                &&
+                resultadoLocal.confianza !==
+                "BAJA"
+            ) {
+
+                respuesta =
+                    resultadoLocal.respuesta;
+
+
+                if (
+                    resultadoLocal
+                        ?.procedimiento
+                        ?.id
+                ) {
+
+                    etiqueta =
+                        (
+                            "Base · " +
+                            resultadoLocal
+                                .procedimiento
+                                .id
+                        );
+                }
+            }
+
+
+            if (
+                mensajeCarga
+            ) {
+
+                actualizarMensaje(
+                    mensajeCarga,
+                    respuesta,
+                    etiqueta
+                );
+
+            } else {
+
+                agregarMensaje(
+                    respuesta,
+                    "asistente",
+                    etiqueta
+                );
+            }
+        }
+
+
+        // =====================================================
+        // PROCESAR OPCIÓN SELECCIONADA
+        // =====================================================
+
+        async function procesarSeleccion(
+            preguntaOriginal,
+            opcion
+        ) {
+
+            cambiarEstadoFormulario(
+                false
+            );
+
+
+            agregarMensaje(
+                opcion.titulo ||
+                opcion.id,
+                "usuario",
+                "Opción seleccionada"
+            );
+
+
+            const mensajeCarga =
+                agregarMensaje(
+                    "Consultando el procedimiento seleccionado...",
+                    "asistente",
+                    "Procesando"
+                );
+
+
+            try {
+
+                const resultado =
+                    await window
+                        .AsistenteIA
+                        .consultarConReferencias(
+                            preguntaOriginal,
+                            [
+                                opcion.ref
+                            ]
+                        );
+
+
+                console.log(
+                    "Resultado de selección:",
+                    resultado
+                );
+
+
+                if (
+                    resultado.ok
+                    &&
+                    resultado.tipo ===
+                    "respuesta"
+                ) {
+
+                    actualizarMensaje(
+                        mensajeCarga,
+                        resultado.respuesta,
+                        construirEtiquetaFuentes(
+                            resultado
+                        )
+                    );
+
+
+                } else if (
+                    resultado.ok
+                    &&
+                    resultado.tipo ===
+                    "sin_resultado"
+                ) {
+
+                    actualizarMensaje(
+                        mensajeCarga,
+                        resultado.respuesta ||
+                        RESPUESTA_SEGURA,
+                        "Sin coincidencia"
+                    );
+
+
+                } else {
+
+                    mostrarRespaldoLocal(
+                        opcion.titulo,
+                        mensajeCarga
+                    );
+                }
+
+
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Error procesando selección:",
+                    error
+                );
+
+
+                mostrarRespaldoLocal(
+                    opcion.titulo,
+                    mensajeCarga
+                );
+            }
+
+
+            finalizarConsulta();
         }
 
 
@@ -312,15 +2206,27 @@ Ejemplos:
         // PROCESAR CONSULTA
         // =====================================================
 
-        async function procesarConsulta() {
+        async function procesarConsulta(
+            consultaManual = null
+        ) {
 
             const texto =
-                pregunta.value.trim();
+                consultaManual !== null
+                    ?
+                    String(
+                        consultaManual
+                    )
+                    .trim()
+                    :
+                    pregunta
+                        .value
+                        .trim();
 
 
             if (
                 !texto
             ) {
+
                 return;
             }
 
@@ -341,172 +2247,58 @@ Ejemplos:
 
 
             // =================================================
-            // 1. MOTOR LOCAL
+            // 1. CÓDIGOS EXACTOS
             // =================================================
-
-            const resultadoLocal =
-                window
-                    .AsistenteMotor
-                    .consultar(
-                        texto
-                    );
-
-
-            console.log(
-                "Resultado local:",
-                resultadoLocal
-            );
-
-
-            // =================================================
-            // 2. CÓDIGOS
-            // No necesitan IA
-            // =================================================
-
-            if (
-                resultadoLocal.tipo ===
-                "codigo"
-            ) {
-
-                agregarMensaje(
-                    resultadoLocal.respuesta,
-                    "asistente"
-                );
-
-                cambiarEstadoFormulario(
-                    true
-                );
-
-                pregunta.focus();
-
-                return;
-            }
-
-
-            // =================================================
-            // 3. SIN RESULTADOS
-            // Gemini NO interviene
-            // =================================================
-
-            if (
-                resultadoLocal.tipo ===
-                "sin_resultado"
-                ||
-                resultadoLocal.tipo ===
-                "error"
-            ) {
-
-                agregarMensaje(
-                    resultadoLocal.respuesta,
-                    "asistente"
-                );
-
-                cambiarEstadoFormulario(
-                    true
-                );
-
-                pregunta.focus();
-
-                return;
-            }
-
-
-            // =================================================
-            // 4. CONFIANZA BAJA
-            // Tampoco usamos Gemini
-            // =================================================
-
-            if (
-                resultadoLocal.confianza ===
-                "BAJA"
-            ) {
-
-                agregarMensaje(
-                    "No existe información suficientemente confirmada " +
-                    "para esta consulta en la base de conocimiento. " +
-                    "Consulta con tu supervisor a cargo.",
-                    "asistente"
-                );
-
-                cambiarEstadoFormulario(
-                    true
-                );
-
-                pregunta.focus();
-
-                return;
-            }
-
-
-            // =================================================
-            // 5. PROCEDIMIENTO ENCONTRADO
-            // Gemini actúa como apoyo
-            // =================================================
-
-            const mensaje =
-                agregarMensaje(
-                    "Analizando información confirmada...",
-                    "asistente"
-                );
-
 
             try {
 
-                const resultadoIA =
-                    await window
-                        .AsistenteIA
-                        .consultar(
-                            texto,
-                            resultadoLocal.resultados
+                if (
+                    window.AsistenteMotor
+                ) {
+
+                    const codigos =
+                        window
+                            .AsistenteMotor
+                            .extraerCodigos(
+                                texto
+                            );
+
+
+                    if (
+                        Array.isArray(
+                            codigos
+                        )
+                        &&
+                        codigos.length >
+                        0
+                    ) {
+
+                        const resultadoCodigo =
+                            window
+                                .AsistenteMotor
+                                .consultar(
+                                    texto
+                                );
+
+
+                        console.log(
+                            "Resultado código:",
+                            resultadoCodigo
                         );
 
 
-                console.log(
-                    "Resultado IA:",
-                    resultadoIA
-                );
+                        agregarMensaje(
+                            resultadoCodigo.respuesta,
+                            "asistente",
+                            "Código de mantenimiento"
+                        );
 
 
-                // =================================================
-                // IA FUNCIONÓ
-                // =================================================
-
-                if (
-                    resultadoIA.ok
-                ) {
-
-                    actualizarMensaje(
-                        mensaje,
-                        resultadoIA.respuesta
-                    );
+                        finalizarConsulta();
 
 
-                    console.log(
-                        "Procedimientos utilizados:",
-                        resultadoIA
-                            .procedimientos_usados
-                    );
-
-                }
-
-
-                // =================================================
-                // IA FALLÓ
-                // Se utiliza respuesta local
-                // =================================================
-
-                else {
-
-                    console.warn(
-                        "Gemini no disponible. " +
-                        "Se utiliza respuesta local."
-                    );
-
-
-                    actualizarMensaje(
-                        mensaje,
-                        resultadoLocal.respuesta
-                    );
+                        return;
+                    }
                 }
 
 
@@ -514,24 +2306,181 @@ Ejemplos:
                 error
             ) {
 
-                console.error(
-                    "Error usando IA:",
+                console.warn(
+                    "No fue posible validar código localmente:",
                     error
-                );
-
-
-                actualizarMensaje(
-                    mensaje,
-                    resultadoLocal.respuesta
                 );
             }
 
 
-            cambiarEstadoFormulario(
-                true
-            );
+            // =================================================
+            // 2. CONSULTA SEMÁNTICA
+            // =================================================
 
-            pregunta.focus();
+            const mensajeCarga =
+                agregarMensaje(
+                    "Analizando tu consulta en la base de conocimiento...",
+                    "asistente",
+                    "Buscando"
+                );
+
+
+            try {
+
+                if (
+                    !window.AsistenteIA
+                ) {
+
+                    throw new Error(
+                        "ia_gemini.js no está disponible."
+                    );
+                }
+
+
+                const resultadoIA =
+                    await window
+                        .AsistenteIA
+                        .consultar(
+                            texto
+                        );
+
+
+                console.log(
+                    "Resultado semántico IA:",
+                    resultadoIA
+                );
+
+
+                // =============================================
+                // RESPUESTA
+                // =============================================
+
+                if (
+                    resultadoIA.ok
+                    &&
+                    resultadoIA.tipo ===
+                    "respuesta"
+                ) {
+
+                    actualizarMensaje(
+                        mensajeCarga,
+                        resultadoIA.respuesta,
+                        construirEtiquetaFuentes(
+                            resultadoIA
+                        )
+                    );
+
+
+                    finalizarConsulta();
+
+
+                    return;
+                }
+
+
+                // =============================================
+                // AMBIGUA
+                // =============================================
+
+                if (
+                    resultadoIA.ok
+                    &&
+                    resultadoIA.tipo ===
+                    "ambigua"
+                ) {
+
+                    actualizarMensaje(
+                        mensajeCarga,
+                        resultadoIA.respuesta ||
+                        "Encontré varias opciones relacionadas. Selecciona la que necesitas consultar.",
+                        "Varias opciones"
+                    );
+
+
+                    if (
+                        Array.isArray(
+                            resultadoIA.opciones
+                        )
+                        &&
+                        resultadoIA
+                            .opciones
+                            .length >
+                            0
+                    ) {
+
+                        mostrarOpciones(
+                            resultadoIA.opciones,
+                            texto
+                        );
+                    }
+
+
+                    finalizarConsulta();
+
+
+                    return;
+                }
+
+
+                // =============================================
+                // SIN RESULTADO
+                // =============================================
+
+                if (
+                    resultadoIA.ok
+                    &&
+                    resultadoIA.tipo ===
+                    "sin_resultado"
+                ) {
+
+                    actualizarMensaje(
+                        mensajeCarga,
+                        resultadoIA.respuesta ||
+                        RESPUESTA_SEGURA,
+                        "Sin información confirmada"
+                    );
+
+
+                    finalizarConsulta();
+
+
+                    return;
+                }
+
+
+                // =============================================
+                // RESPALDO
+                // =============================================
+
+                console.warn(
+                    "La IA no pudo procesar la consulta. Se utiliza el motor local como respaldo."
+                );
+
+
+                mostrarRespaldoLocal(
+                    texto,
+                    mensajeCarga
+                );
+
+
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Error consulta semántica:",
+                    error
+                );
+
+
+                mostrarRespaldoLocal(
+                    texto,
+                    mensajeCarga
+                );
+            }
+
+
+            finalizarConsulta();
         }
 
 
@@ -539,9 +2488,12 @@ Ejemplos:
         // BOTÓN
         // =====================================================
 
-        boton.addEventListener(
+        botonConsultar.addEventListener(
             "click",
-            procesarConsulta
+            () => {
+
+                procesarConsulta();
+            }
         );
 
 
@@ -551,9 +2503,7 @@ Ejemplos:
 
         pregunta.addEventListener(
             "keydown",
-            function (
-                evento
-            ) {
+            evento => {
 
                 if (
                     evento.key ===
@@ -562,6 +2512,7 @@ Ejemplos:
 
                     evento.preventDefault();
 
+
                     procesarConsulta();
                 }
             }
@@ -569,7 +2520,7 @@ Ejemplos:
 
 
         // =====================================================
-        // INICIAR ASISTENTE
+        // INICIAR
         // =====================================================
 
         async function iniciarAsistente() {
@@ -579,48 +2530,43 @@ Ejemplos:
             );
 
 
-            estado.textContent =
-                "Cargando base de conocimiento...";
+            generarConsultasRapidas();
 
 
-            estado.classList.remove(
-                "correcto",
-                "error"
-            );
+            cargarVigenciaBase();
 
+
+            estadoSistema.className =
+                "estado-sistema cargando";
+
+
+            textoEstado.textContent =
+                "Iniciando sistema...";
+
+
+            let motorDisponible =
+                false;
+
+
+            // =================================================
+            // MOTOR LOCAL
+            // =================================================
 
             try {
 
-                const resultado =
-                    await window
-                        .AsistenteMotor
-                        .inicializar();
-
-
                 if (
-                    resultado.ok
+                    window.AsistenteMotor
                 ) {
 
-                    estado.textContent =
-                        "Base de conocimiento cargada correctamente.";
-
-                    estado.classList.add(
-                        "correcto"
-                    );
+                    const resultado =
+                        await window
+                            .AsistenteMotor
+                            .inicializar();
 
 
-                    cambiarEstadoFormulario(
-                        true
-                    );
-
-
-                    pregunta.focus();
-
-                } else {
-
-                    throw new Error(
-                        resultado.mensaje
-                    );
+                    motorDisponible =
+                        resultado.ok ===
+                        true;
                 }
 
 
@@ -628,24 +2574,98 @@ Ejemplos:
                 error
             ) {
 
-                console.error(
+                console.warn(
+                    "Motor local no disponible:",
                     error
                 );
-
-
-                estado.textContent =
-                    "Error cargando la base de conocimiento.";
-
-                estado.classList.add(
-                    "error"
-                );
-
-
-                agregarMensaje(
-                    "No se pudo iniciar el asistente.",
-                    "asistente"
-                );
             }
+
+
+            // =================================================
+            // IA
+            // =================================================
+
+            const iaDisponible =
+                Boolean(
+                    window.AsistenteIA
+                );
+
+
+            // =================================================
+            // ESTADO
+            // =================================================
+
+            if (
+                iaDisponible
+            ) {
+
+                estadoSistema.className =
+                    "estado-sistema disponible";
+
+
+                if (
+                    motorDisponible
+                ) {
+
+                    textoEstado.textContent =
+                        "Sistema disponible";
+
+                } else {
+
+                    textoEstado.textContent =
+                        "IA disponible · respaldo local limitado";
+                }
+
+
+                cambiarEstadoFormulario(
+                    true
+                );
+
+
+                pregunta.focus();
+
+
+                return;
+            }
+
+
+            if (
+                motorDisponible
+            ) {
+
+                estadoSistema.className =
+                    "estado-sistema disponible";
+
+
+                textoEstado.textContent =
+                    "Modo local disponible";
+
+
+                cambiarEstadoFormulario(
+                    true
+                );
+
+
+                pregunta.focus();
+
+
+                return;
+            }
+
+
+            estadoSistema.className =
+                "estado-sistema error";
+
+
+            textoEstado.textContent =
+                "Sistema no disponible";
+
+
+            agregarMensaje(
+                "No fue posible iniciar el asistente.",
+                "asistente",
+                "Error"
+            );
         }
 
 
